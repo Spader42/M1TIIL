@@ -1,0 +1,42 @@
+import java_cup.runtime.*;
+
+parser code {:
+    public static void main(String args[]) throws Exception {
+        new parser(new Yylex(System.in)).parse();
+    }
+:}
+
+action code {:
+    String str = new String("");
+    int nbPar = 0;
+    boolean good = true;
+:}
+
+terminal String STRING;
+terminal Integer PARD;
+terminal Integer PARG;
+non terminal expr, list_nb;
+
+expr        ::= list_nb {:  System.out.println(" Analyse terminée ! ");
+                            if(good && nbPar == 0)
+                                System.out.println("Texte correct");
+                            else
+                                System.out.println("Texte incorrect");
+                         :}
+              | {: System.out.println(" Entree vide ! "); :};
+list_nb     ::= STRING:n {: :} list_nb
+              | STRING:n {: :}
+              | PARD:n {: if(nbPar == 0){
+                            good = false;
+                          }
+                          else{
+                            nbPar--;
+                          }:} list_nb
+              | PARD:n {: if(nbPar == 0){
+                            good = false;
+                          }
+                          else{
+                            nbPar--;
+                          }:}
+              | PARG:n {: nbPar++;:} list_nb
+              | PARG:n {: nbPar++;:};

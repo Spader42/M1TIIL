@@ -1,0 +1,10 @@
+#USE "course.lib"
+
+PROC systeme(CHAN OF BYTE keyboard, error, screen)
+  VAL INT nbNode IS 4:
+  [nbNode] CHAN INT screenChan:
+  [nbNode] CHAN INT nodeChan:
+  PAR i = 0 FOR nbNode
+    nodeInRing(nodeChan[i], screenChan[i])
+    ringScreen(screenChan[i])  
+:

@@ -1,0 +1,28 @@
+<PROGRAMME_DOMUS>
+    <DECLARATION_APPAREILS>
+    
+    </DECLARATION_APPAREILS>
+    
+    
+    <DECLARATION_INTERFACES>
+    
+    </DECLARATION_INTERFACES>
+    
+    
+    <DECLARATION_SCENARII>
+    
+       <SCENARIO soiree>
+       </SCENARIO soiree>
+       
+       <SCENARIO noel>
+       </SCENARIO noel>
+        
+    </DECLARATION_SCENARII>
+    
+    
+    <DECLARATION_COMMANDES>
+    
+    </DECLARATION_COMMANDES>
+    
+</PROGRAMME_DOMUS>
+

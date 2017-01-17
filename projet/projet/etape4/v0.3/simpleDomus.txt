@@ -1,0 +1,52 @@
+<PROGRAMME_DOMUS>
+    //Déclartion des appareils
+    <DECLARATION_APPAREILS>
+        eclairage e1, s1, s2.
+        volet v1.
+    </DECLARATION_APPAREILS>
+    
+    //Déclaration  des interfaces
+    <DECLARATION_INTERFACES>
+        interrupteur toutAllumer, toutEteindre, allumerSalon.
+        interrupteur gestionVolet.
+    </DECLARATION_INTERFACES>
+    
+    //Déclaration des scenarii
+    <DECLARATION_SCENARII>
+    
+        <SCENARIO bonjour>
+            pourtout v:eclairage faire v.allumer; fait;
+            v1.ouvrir;
+        </SCENARIO bonjour>
+        
+        
+        <SCENARIO aurevoir>
+            pourtout v:eclairage faire v.eteindre; fait;
+            v1.fermer;
+        </SCENARIO aurevoir>
+        
+        
+        <SCENARIO salon>
+            s1.allumer;
+            s2.allumer;
+        </SCENARIO salon>
+        
+        <SCENARIO gestionnaireVolet>
+            si(v1.etat == ouvert) alors v1.fermer;
+            sinon v1.ouvrir; fsi;
+        </SCENARIO gestionnaireVolet>
+        
+    </DECLARATION_SCENARII>
+    
+    //Déclaration des commandes
+    <DECLARATION_COMMANDES>
+        associer toutAllumer = bonjour.
+        associer toutEteindre = aurevoir.
+        associer allumerSalon = salon.
+        associer gestionVolet = gestionnaireVolet.
+        
+        programmer gestionnaireVolet = (2016, 12, _, _, _).
+    </DECLARATION_COMMANDES>
+    
+</PROGRAMME_DOMUS>
+

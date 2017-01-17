@@ -1,0 +1,14 @@
+CPN Tools simulation report for:
+/cygdrive/H/tp/tpSystemeTempsReels/tp3.cpn
+Report generated: Fri Oct 21 12:10:51 2016
+
+1	0	EnA @ (1:rdp)
+2	5	EnB @ (1:rdp)
+3	10	EnA @ (1:rdp)
+4	15	EnB @ (1:rdp)
+5	20	EnA @ (1:rdp)
+6	25	EnB @ (1:rdp)
+7	30	EnA @ (1:rdp)
+8	35	EnB @ (1:rdp)
+9	40	EnA @ (1:rdp)
+10	45	EnB @ (1:rdp)

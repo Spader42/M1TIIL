@@ -1,0 +1,43 @@
+import static org.junit.Assert.*;
+
+import org.junit.Test;
+
+
+public class ClosedHashDictTest {
+
+	@Test
+	public void test() {
+		int taille = 10;
+		ClosedHashDict<Integer, Integer> ht = new ClosedHashDict<Integer, Integer>(taille); 
+		assertTrue(ht.size() == 0);
+		
+		int key = 5;
+		int value = 10;
+		
+		assertTrue(ht.put(key, value) == value);
+		assertTrue(ht.size() == 1);
+		
+		assertTrue(ht.remove(key) == value);
+		assertTrue(ht.size() == 0);
+		
+		for(int i = 0; i < taille; i++){
+			assertTrue(ht.put(key + i, value) == value);
+		}
+		assertTrue(ht.put(key, value) == value);
+
+		assertTrue(ht.put(key, value) == null);
+		assertTrue(ht.size() == taille);
+		
+		for(int i = 0; i < taille; i++){
+			assertTrue(ht.remove(key + i) == value);
+		}
+		
+		assertTrue(ht.remove(key) == null);
+		
+		ht.put(key, value);
+		assertTrue(ht.get(key) == value);
+		assertTrue(ht.containsValue(value));
+		assertTrue(ht.containsKey(key));
+	}
+
+}

@@ -1,0 +1,24 @@
+import static org.junit.Assert.*;
+
+import org.junit.Test;
+
+
+public class OpenedClosedHashDictTest {
+
+	@Test
+	public void test() {
+		int taille = 10;
+		OpenedClosedHashDict<Integer, Integer> ht = new OpenedClosedHashDict<Integer, Integer>(taille);
+		int key 	= 5;
+		int value = 10;
+		
+		assertTrue(ht.size() == 0);
+		
+		for(int i = 0; i < taille; i++) {
+			assertTrue(ht.put(key + i, value) == value);
+		}
+		
+		assertTrue(ht.size() == 10);
+	}
+
+}

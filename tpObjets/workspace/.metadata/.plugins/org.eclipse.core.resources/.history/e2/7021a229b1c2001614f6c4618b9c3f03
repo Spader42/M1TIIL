@@ -1,0 +1,13 @@
+
+public class OpenedClosedHashDict<K, V> extends ClosedHashDict<K, V>{
+
+	public OpenedClosedHashDict(int capacity) {
+		super(capacity);
+	}
+
+	@Override
+	public V put(K key, V value) {
+		return value;
+
+	}
+}

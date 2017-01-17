@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Move 4 elements to &apos;Listes/src/listes&apos;&#x0A;- Original project: &apos;Listes&apos;&#x0A;- Destination element: &apos;Listes/src/listes&apos;&#x0A;- Original elements:&#x0A;     ListeDC.java&#x0A;     ListeDCE.java&#x0A;     ListeE.java&#x0A;     Liste.java&#x0A;- Update references to refactored element" description="Move compilation units" destination="/src&lt;listes" element1="/src&lt;{ListeDC.java" element2="/src&lt;{ListeDCE.java" element3="/src&lt;{ListeE.java" element4="/src&lt;{Liste.java" files="0" flags="589830" folders="0" id="org.eclipse.jdt.ui.move" policy="org.eclipse.jdt.ui.moveResources" qualified="false" references="true" stamp="1477030669674" units="4" version="1.0"/>
+</session>

@@ -1,0 +1,142 @@
+#INCLUDE "ss.module"
+#USE "course.lib"
+
+VAL INT infini IS 16:
+
+VAL INT maxVois IS 3:
+
+--definition du type INFOROUTE pour les table de routage
+DATA TYPE INFOROUTE
+  RECORD
+    INT indVois:
+    INT cout:
+: 
+
+DATA TYPE TABROUTE IS [7] INFOROUTE:
+  
+--definition de la procedure pour le multiplexage de l'impression
+--affiche la table de routage d'un noeud 
+PROC ringScreen([] CHAN OF  TABROUTE theirScreens, CHAN OF BYTE screen)
+  TABROUTE table:
+  SEQ
+    WHILE TRUE
+      ALT i = 0 FOR SIZE theirScreens
+        theirScreens[i] ? table
+          SEQ
+            fg.col(bold.blue, screen!)
+            out.string ("-----Routeur", 	0, screen)
+            fg.col(bold.green, screen!)
+            out.number (i, 2, screen)
+            fg.col(bold.blue, screen!)
+            out.string ("-----", 0, screen)
+            screen ! '*n'
+            fg.col(bold.red, screen!)
+            out.string ("Dest", 0, screen!)
+            fg.col(bold.blue, screen!)
+            out.string (" | ", 0, screen!)
+            fg.col(bold.red, screen!)
+            out.string ("Vois", 0, screen!) 
+            fg.col(bold.blue, screen!)
+            out.string (" | ", 0, screen!)
+            fg.col(bold.red, screen!)
+            out.string ("Cout", 0, screen!)
+            fg.col(bold.blue, screen!)
+            screen ! '*n' 
+            SEQ j= 0 FOR 7
+              SEQ
+                --Destination
+                fg.col(bold.blue, screen!)
+                out.string(" ", 0, screen!)
+                out.number (j, 2, screen)
+                --Voisin
+                out.string("     ", 0, screen)
+                out.number (table[j][indVois], 2, screen)
+                --Cout
+                out.string("     ", 0, screen!)	
+                IF 
+                  table[j][cout] = infini
+                    SEQ
+                      fg.col(bold.magenta, screen!)
+                      out.string ("inf", 0, screen)
+                      fg.col(bold.blue, screen!)
+                  TRUE
+                    out.number (table[j][cout], 2, screen)
+                screen ! '*n'
+                fg.col(black, screen!)
+:    
+  
+--procedure définissant un routeur
+PROC routeur (VAL INT id, [] CHAN OF TABROUTE in, [] CHAN OF TABROUTE out,CHAN OF TABROUTE screenOut )
+  TABROUTE tableLoc:
+  BOOL test:
+  [maxVois] TABROUTE tableVois:
+  SEQ
+    test := FALSE
+    --Initialisation de la table locale
+    SEQ i = 0 FOR SIZE tableLoc
+      SEQ
+        IF
+          id = i
+            tableLoc[i][cout] := 0
+          TRUE
+            tableLoc[i][cout] := infini
+        tableLoc[i][indVois] := -1
+    WHILE TRUE
+      SEQ
+        --communications
+        PAR
+          PAR i = 0 FOR SIZE out
+            out[i] ! tableLoc
+          PAR i = 0 FOR SIZE in
+            in[i] ? tableVois[i]
+        --changement d'etat de la table locale
+        SEQ i = 0 FOR SIZE in
+          SEQ j = 0 FOR SIZE tableVois[i]
+            SEQ
+              IF
+                tableLoc[j][cout] > (tableVois[i][j][cout] + 1)
+                  SEQ
+                    tableLoc[j][cout] := (tableVois[i][j][cout] + 1)
+                    tableLoc[j][indVois] := i
+                    test := TRUE
+                TRUE
+                  SKIP               
+              IF
+                test = TRUE
+                  SEQ
+                    screenOut ! tableLoc
+                    test := FALSE
+                TRUE
+                  SKIP
+:
+
+PROC reseau(CHAN OF BYTE screen)
+  [7]CHAN OF TABROUTE dummyScreen:
+  [16]CHAN OF TABROUTE lien:
+
+  r0In IS [lien[1], lien[7]]:
+  r1In IS [lien[0], lien[3]]:
+  r2In IS [lien[6], lien[5]]:
+  r3In IS [lien[2], lien[4], lien[9]]:
+  r4In IS [lien[8], lien[13], lien[11]]:
+  r5In IS [lien[10], lien[15]]:
+  r6In IS [lien[12], lien[14]]:
+  
+  r0Out IS [lien[0], lien[6]]:
+  r1Out IS [lien[1], lien[2]]:
+  r2Out IS [lien[7], lien[4]]:
+  r3Out IS [lien[3], lien[5],lien[8]]:
+  r4Out IS [lien[9], lien[12], lien[10]]:
+  r5Out IS [lien[11], lien[14]]:
+  r6Out IS [lien[13], lien[15]]:
+  PAR
+    --exemple avec 2 noeuds
+    ringScreen(dummyScreen,screen)
+    routeur(0,r0In,r0Out,dummyScreen[0])
+    routeur(1,r1In,r1Out,dummyScreen[1])
+    routeur(2,r2In,r2Out,dummyScreen[2])
+    routeur(3,r3In,r3Out,dummyScreen[3])
+    routeur(4,r4In,r4Out,dummyScreen[4])
+    routeur(5,r5In,r5Out,dummyScreen[5])
+    routeur(6,r6In,r6Out,dummyScreen[6])
+:

@@ -1,0 +1,58 @@
+import java_cup.runtime.*;
+
+parser code {:
+    public static void main(String args[]) throws Exception {
+        new parser(new Yylex(System.in)).parse();
+    }
+:}
+
+action code {:
+    String str = new String("");
+    String error = new String("");
+    int nbPar = 0;
+    boolean good = true;
+:}
+
+terminal String STRING;
+terminal String WHATEVER;
+terminal String NEWLINE;
+terminal Integer PARD;
+terminal Integer PARG;
+non terminal expr, list_nb;
+
+expr        ::= list_nb {:  System.out.println("Analyse terminée ! \n");
+                            System.out.println("Texte filtré :");
+                            System.out.println(str);
+                            System.out.println("Char(s) non reconnu(s) : ");
+                            System.out.println(error);
+                            if(good && nbPar == 0)
+                                System.out.println("Texte correct");
+                            else
+                                System.out.println("Texte incorrect");
+
+                            
+                         :}
+              | {: System.out.println(" Entree vide ! "); :};
+list_nb     ::= STRING:n        {: str += n; :} list_nb
+              | STRING:n        {: str += n; :}
+              | PARD:n          {: if(nbPar == 0){
+                                    good = false;
+                                  }
+                                  else{
+                                    nbPar--;
+                                    str += ")";
+                                  }:} list_nb
+              | PARD:n          {: if(nbPar == 0){
+                                    good = false;
+                                  }
+                                  else{
+                                    nbPar--;
+                                    str += ")";
+                                  }:}
+              | PARG:n          {: nbPar++; str += "(";:} list_nb
+              | PARG:n          {: nbPar++; str += "(";:}
+              | NEWLINE:n       {: str += n;:} list_nb
+              | NEWLINE:n       {: str += n;:} 
+              | WHATEVER:n      {: error += n;:} list_nb
+              | WHATEVER:n      {: error += n;:};
+              

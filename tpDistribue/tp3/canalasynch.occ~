@@ -1,0 +1,109 @@
+#INCLUDE "consts.inc"
+#USE "course.lib"
+
+VAL INT Temmetteur  IS 1:
+VAL INT Trecepteur  IS 2:
+VAL INT PASTEMPS    IS 10000:
+VAL INT TailleMax   IS 100:
+VAL INT TFifo       IS 10:
+
+PROC affichage(VAL []	BYTE fifo, CHAN OF BYTE screen)
+  SEQ
+    erase.screen(screen!)
+    cursor.x.y(0, 0, screen!)
+    SEQ i = 0 FOR TFifo
+      SEQ
+        out.string("[", 0, screen!)
+        IF
+          fifo[i] <> '*n'
+            out.byte(fifo[i], 0, screen!)
+          TRUE
+            out.string(" ", 0, screen!)
+        out.string("]", 0, screen!)
+:
+
+
+PROC Tempo (VAL INT pas)
+  TIMER clock :
+  INT timeNow :
+  INT timeToWait :
+  SEQ
+    clock ? timeNow
+    timeToWait := timeNow + (pas*PASTEMPS)
+    clock ? AFTER timeToWait
+:
+
+
+PROC canalAsync(CHAN OF BYTE sendChan, rcvReqChan, rcvDataChan, VAL INT room)
+  [TFifo] BYTE fifo:
+  BYTE m:
+  INT occupation:
+  INT maximum:
+  INT read:
+  INT write:
+  SEQ
+    SEQ i = 0 FOR TFifo
+      fifo[i] := '*n'
+    maximum := room
+    occupation := 0
+    read := 0
+    write := 0
+    SEQ 
+      WHILE TRUE
+        ALT
+          sendChan ? m
+            SEQ
+              IF
+                occupation < maximum
+                  SEQ
+                    fifo[write] := m
+                    write := (write + 1) \ TFifo
+                    occupation := occupation + 1
+                TRUE
+                  SKIP          
+          rcvReqChan ? m
+            SEQ
+              IF
+                occupation > 0 
+                  SEQ
+                    m := fifo[read]
+                    read := (read + 1) \ TFifo
+                    rcvDataChan ! m
+                    occupation := occupation - 1
+                TRUE
+                  SEQ
+                    rcvDataChan ! '#'
+
+:
+
+PROC emetteur(CHAN OF BYTE send)
+  VAL [] BYTE phrase IS "essai *n":
+  WHILE TRUE
+    SEQ i=0 FOR SIZE phrase
+      SEQ
+        send ! phrase[i]
+        Tempo(Temmetteur)
+:
+
+PROC recepteur(CHAN OF BYTE rcvReq,rcvData, screen)
+  BYTE m:
+  WHILE TRUE
+    SEQ
+      rcvReq ! 'r'
+      rcvData ? m
+      IF
+        m = '#'
+          screen ! '#'
+        TRUE
+          screen ! m
+      Tempo(Trecepteur)
+:
+
+PROC systeme (CHAN OF BYTE screen)  
+  CHAN OF BYTE send,rcvReq,rcvData:
+  PAR
+    canalAsync(send, rcvReq, rcvData, 10)
+    emetteur (send)
+    recepteur (rcvReq, rcvData, screen)
+:
+

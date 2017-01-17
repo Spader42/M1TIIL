@@ -1,0 +1,236 @@
+// Specification JCup
+import java_cup.runtime.*;
+import java.util.*;
+import java.io.*;
+
+parser code {:
+	public static void main(String args[]) throws Exception {
+		new parser(new Yylex(System.in)).parse();
+	}
+:}
+
+
+terminal 
+//Appareils
+ECLAIRAGE,
+VOLET,
+CHAUFFAGE,
+ALARME,
+FENETRE,
+AUTRE_APPAREIL,
+INTERRUPTEUR,
+MOBILE,
+TELEPHONE,
+TELECOMMANDE,
+TABLETTE,
+TV,
+HIFI,
+CAFETIERE,
+VIDEO_PROJ,
+LAVE_VAISSELLE,
+LAVE_LINGE,
+SECHE_LINGE,
+ORDINATEUR,
+PORTAIL,
+
+//Etats appareils
+ALLUME,
+ETEINT,
+DEMI,
+ECO,
+OUVERT,
+FERME,
+
+//Methodes appareils
+OUVRIR,
+FERMER,
+ETEINDRE,
+ALLUMER,
+TAMISER,
+ETAT,
+ALLUMER_PARTIEL,
+ALLUMER_ECO,
+OUVRIR_PARTIEL,
+FERMER_PARTIEL,
+
+//Instructions
+POURTOUT,
+FAIRE,
+FAIT,
+SI,
+ALORS,
+SINON,
+FSI,
+
+//Fonctions DOMUS
+DEFINIR,
+EXECUTER_SCENARIO,
+ASSOCIER,
+PROGRAMMER,
+MESSAGE,
+
+//Balises MODUS
+PROGRAMME_DOMUS,
+DECLARATION_APPAREILS,
+DECLARATION_INTERFACES,
+DECLARATION_SCENARII,
+DECLARATION_COMMANDES,
+SCENARIO,
+
+//Operateurs
+PAR_GAUCHE,
+PAR_DROITE,
+ACO_GAUCHE,
+ACO_DROITE,
+AFFECTATION,
+EGALITE,
+POINT_VIRGULE,
+CHEVRON_GAUCHE,
+CHEVRON_DROIT,
+SLASH,
+UNDERSCORE,
+POINT,
+VIRGULE,
+DEUX_POINT;
+
+// qqs exemples de règles lexicales légales...
+terminal Integer ENTIER;
+terminal String IDENTIFIANT, CHAINE;
+
+non terminal
+    prog,
+    domus, openDomus, closeDomus, domusContent,
+    declarationAppareilsInterfaces, declarationScenarii, declarationCommande,
+    declarationAppareils, declarationInterfaces,
+    openAppareils, closeAppareils,
+    openInterfaces, closeInterfaces,
+    openScenarii, closeScenarii, scenariiContent, multipleScenario,
+    scenario,
+    openCommande, closeCommande
+;
+
+non terminal String openScenario, closeScenario;
+
+prog ::=
+    domus {: System.out.println("Analyse terminée."); :}
+    | {: System.out.println("Fichier vide."); :};
+
+domus ::=
+    openDomus {: System.out.println("Début du Domus..."); :}
+    domusContent
+    closeDomus {: System.out.println("Domus déclaré."); :};
+    
+domusContent ::=
+    declarationAppareilsInterfaces
+    declarationScenarii
+    declarationCommande;
+
+
+declarationAppareilsInterfaces ::=
+    declarationAppareils
+    declarationInterfaces
+    |   declarationInterfaces
+        declarationAppareils;
+
+
+declarationAppareils ::=
+    openAppareils {: System.out.println("\tDéclaration des appareils..."); :}
+    closeAppareils {: System.out.println("\tAppareils déclarés.\n"); :};
+ 
+declarationInterfaces ::=
+    openInterfaces {: System.out.println("\tDéclaration des interfaces..."); :}
+    closeInterfaces {: System.out.println("\tInterfaces déclarées.\n"); :};  
+    
+
+declarationScenarii ::=
+    openScenarii {: System.out.println("\tDéclaration du Scenarii...\n"); :}
+    scenariiContent
+    closeScenarii {: System.out.println("\tScenarii déclaré.\n"); :};
+
+scenariiContent ::=
+    scenariiContent scenario
+    | scenario;
+
+scenario ::=
+    openScenario:identifiantOpen {: System.out.println("\t\tDéclaration du Scenario \"" + identifiantOpen + "\"..."); :}
+    closeScenario:identifiantClose {: System.out.println("\t\tScenario \"" + identifiantClose + "\" déclaré.\n"); :};
+
+
+declarationCommande ::=
+    openCommande {: System.out.println("\tDéclaration des commandes..."); :}
+    closeCommande {: System.out.println("\tCommandes déclarées.\n"); :};
+
+
+
+openDomus ::=
+    CHEVRON_GAUCHE
+    PROGRAMME_DOMUS
+    CHEVRON_DROIT;
+    
+closeDomus ::=
+    CHEVRON_GAUCHE
+    SLASH
+    PROGRAMME_DOMUS
+    CHEVRON_DROIT;
+  
+    
+openAppareils ::=
+    CHEVRON_GAUCHE
+    DECLARATION_APPAREILS
+    CHEVRON_DROIT;
+
+closeAppareils ::=
+    CHEVRON_GAUCHE
+    SLASH
+    DECLARATION_APPAREILS
+    CHEVRON_DROIT;
+
+
+openInterfaces ::=
+    CHEVRON_GAUCHE
+    DECLARATION_INTERFACES
+    CHEVRON_DROIT;
+
+closeInterfaces ::=
+    CHEVRON_GAUCHE
+    SLASH
+    DECLARATION_INTERFACES
+    CHEVRON_DROIT;
+
+
+openScenarii ::=
+    CHEVRON_GAUCHE
+    DECLARATION_SCENARII
+    CHEVRON_DROIT; 
+
+closeScenarii ::=
+    CHEVRON_GAUCHE
+    SLASH
+    DECLARATION_SCENARII
+    CHEVRON_DROIT;
+
+
+openScenario ::=
+    CHEVRON_GAUCHE
+    SCENARIO
+    IDENTIFIANT:identifiant
+    CHEVRON_DROIT {: RESULT = identifiant; :};
+
+closeScenario ::=
+    CHEVRON_GAUCHE
+    SLASH
+    SCENARIO
+    IDENTIFIANT:identifiant
+    CHEVRON_DROIT {: RESULT = identifiant; :};
+
+
+openCommande ::=
+    CHEVRON_GAUCHE
+    DECLARATION_COMMANDES
+    CHEVRON_DROIT;
+    
+closeCommande ::=
+    CHEVRON_GAUCHE
+    SLASH
+    DECLARATION_COMMANDES
+    CHEVRON_DROIT;

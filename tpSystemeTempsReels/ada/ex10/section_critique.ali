@@ -1,0 +1,146 @@
+V "GNAT Lib v4.6"
+M P AB W=b
+A -g
+P SS ZX
+R nnnvnnnnnnnnnnnnnnvnnvnnnvnvvvnvnvvnnnnnnvnnvnnvnvnvnnnnnnvnnnnnnnnnnnnv1nv1+nnnv1+nn
+
+U section_critique%b	section_critique.adb	ab5bbeee NE OO SU
+W ada%s			ada.ads			ada.ali
+W ada.exceptions%s	a-except.adb		a-except.ali
+W ada.numerics%s	a-numeri.ads		a-numeri.ali
+W ada.numerics.discrete_random%s
+W ada.real_time%s	a-reatim.adb		a-reatim.ali
+W ada.tags%s		a-tags.adb		a-tags.ali
+W ada.text_io%s		a-textio.adb		a-textio.ali
+W ada.text_io.integer_aux%s  a-tiinau.adb	a-tiinau.ali
+W ada.text_io.integer_io%s
+W semaphores%s		semaphores.adb		semaphores.ali
+W system%s		system.ads		system.ali
+W system.finalization_implementation%s  s-finimp.adb  s-finimp.ali
+W system.finalization_root%s  s-finroo.adb	s-finroo.ali
+W system.img_int%s	s-imgint.adb		s-imgint.ali
+W system.parameters%s	s-parame.adb		s-parame.ali
+W system.secondary_stack%s  s-secsta.adb	s-secsta.ali
+W system.soft_links%s	s-soflin.adb		s-soflin.ali
+W system.standard_library%s  s-stalib.adb	s-stalib.ali
+W system.task_info%s	s-tasinf.adb		s-tasinf.ali
+W system.tasking%s	s-taskin.adb		s-taskin.ali
+W system.tasking.protected_objects%s  s-taprob.adb  s-taprob.ali
+W system.tasking.protected_objects.operations%s  s-tpobop.adb  s-tpobop.ali
+W system.tasking.rendezvous%s  s-tasren.adb	s-tasren.ali
+W system.tasking.stages%s  s-tassta.adb		s-tassta.ali
+W text_io%s		text_io.ads		text_io.ali
+
+D ada.ads		20070406091342 3ffc8e18
+D a-except.ads		20090727140100 0c711ac9
+D a-finali.ads		20090409150019 e5e85fa4
+D a-filico.ads		20090409150019 872dc219
+D a-ioexce.ads		20091130110856 8b9de6cd
+D a-numeri.ads		20080324174807 bb51c45a
+D a-nudira.ads		20100622172941 2fef2912
+D a-nudira.adb		20100622172941 e57ce22b
+D a-reatim.ads		20090409150019 63f07669
+D a-stream.ads		20090409150019 2ca4ee37
+D a-tags.ads		20101021101406 c7695348
+D a-textio.ads		20091028140912 386df5d4
+D a-tiinau.ads		20090409150019 8114c8e4
+D a-tiinio.ads		20090409150019 aa04e5d6
+D a-tiinio.adb		20091130162119 df9cd7af
+D a-unccon.ads		20070406091342 f9eb8f06
+D interfac.ads		20090409150019 f77d8799
+D i-c.ads		20101007125900 809c38c4
+D i-cstrea.ads		20100622165701 1bd72c32
+D section_critique.adb	20161124080837 c03a2e29
+D semaphores.ads	20161118094655 01589f1c
+D system.ads		20140416172229 23e1f70b
+D s-atacco.ads		20090409150019 1dc856ad
+D s-crtl.ads		20100617122610 ac77b159
+D s-exctab.ads		20090417131547 66e51330
+D s-ficobl.ads		20100909103250 443b9d66
+D s-finimp.ads		20090409150019 46853fe8
+D s-finroo.ads		20090409150019 dbb860c9
+D s-imgint.ads		20090409150019 02dbe0c2
+D s-linux.ads		20090730092306 47911ab1
+D s-multip.ads		20101011073009 38ac9f73
+D s-osinte.ads		20101127183452 6e2d2e09
+D s-parame.ads		20091130110856 9c5d83fa
+D s-rannum.ads		20100623054052 5eb33f0a
+D s-secsta.ads		20090707124243 eea35a36
+D s-soflin.ads		20090729085153 9414c974
+D s-stache.ads		20090417130712 596fc1b4
+D s-stausa.ads		20101018101807 bba781f7
+D s-stalib.ads		20101021102512 c4241c00
+D s-stoele.ads		20090417130712 facd7d98
+D s-stoele.adb		20100617152355 afc5dc80
+D s-stratt.ads		20100909123135 aedef97e
+D s-tasinf.ads		20090409150019 21316953
+D s-taspri.ads		20080408071349 af44aca8
+D s-taprop.ads		20090409150019 07f79e46
+D s-taskin.ads		20101021101406 b2eaee08
+D s-taprob.ads		20090409150019 502249e3
+D s-tpoben.ads		20090409150019 e8374469
+D s-tpobop.ads		20090409150019 5f548bb3
+D s-tasren.ads		20090409150019 86fa7427
+D s-tassta.ads		20101018103456 e88ef99e
+D s-traent.ads		20090417130712 5221ee41
+D s-unstyp.ads		20090409150019 6ae15c76
+D s-wchcon.ads		20090417130712 bfeb2e3d
+D text_io.ads		20070406091342 45d626c9
+X 1 ada.ads
+16K9*Ada 19e8 20|5r6
+X 6 a-numeri.ads
+16K13*Numerics 32e17 20|5r10
+X 7 a-nudira.ads
+44k22*Discrete_Random 73e33 20|5w19
+X 12 a-textio.ads
+243U14*Put 20|31s13 33s17 53s13 75s13
+264U14*Put_Line 20|35s13 55s13 77s13
+X 14 a-tiinio.ads
+45k21*Integer_IO 84e27 20|14r26
+65U14 Put 20|54s19[14] 76s19[14]
+X 20 section_critique.adb
+7U11*Section_Critique 7b11 107l5 107t21
+8w5 Mutex{21|2W20} 19r13 20r13 95r5
+9w5 nb_plein{21|2W20} 56r13 78r13 97r5
+9w15 nb_vide{21|2W20} 50r13 74r13 96r5
+10i5 fifoMax{integer} 13r22 52r48 73r50 92r17
+11i5 indiceProd{integer} 51r18 52m13 52r28
+12i5 indiceConso{integer} 72r18 73m13 73r29
+13a5 fifo(integer) 32r25 33r35 51m13 72m13 93m13
+14K13 intio[14|45] 54r13 76r13
+15T15 Une 16b15 22l9 22t12 83r28 99r32
+24T15 Afficher 26l9 26e17 28b15 37l9 37t17 38r17
+25Y15 Affichage 30b16 36l13 36t22 57s23 79s23
+32i17 i{integer} 33r40
+38t5 Afficheur{24T15} 57r13 79r13
+39T15 Producteur 41l9 41e19 43b15 59l9 59t19 87r45
+40Y15 setId 40>21 46b16 48l13 48t18 102s21
+40i21 data{integer} 47r19
+44i9 id{integer} 47m13 54r23
+46i22 data{integer}
+61T15 Consommateur 63l9 63e21 65b15 81l9 81t21 88r47
+62Y15 setId 62>21 68b16 70l13 70t18 105s22
+62i21 data{integer} 69r19
+66i9 id{integer} 69m13 76r23
+68i22 data{integer}
+83P10 Une_Ptr(15T15) 84r34
+84a5 Plusieurs(83P10) 99m13
+85i5 maxProd{integer} 87r33 101r17
+86i5 maxConso{integer} 88r34 104r17
+87A10 TableProd(39T15)<integer> 89r12
+88A10 TableConso(61T15)<integer> 90r13
+89a5 prod{87A10} 102r13
+90a5 conso{88A10} 105r13
+92i9 i{integer} 93r18
+98i9 i{integer} 99r23
+101i9 i{integer} 102r18 102r27
+104i9 i{integer} 105r19 105r28
+X 21 semaphores.ads
+1K9*Semaphores 20|1w6 2r5 21|10e15
+2W20*Semaphore 20|8r13 9r25 21|9e18
+3Y15 P 20|19s19 50s21 78s22
+4U19 V 20|20s19 56s22 74s21
+5U19 Init 20|95s11 96s13 97s14
+X 55 text_io.ads
+24K9*Text_IO=24:29 20|3w6 4r5
+

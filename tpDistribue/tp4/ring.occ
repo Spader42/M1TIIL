@@ -1,0 +1,123 @@
+#USE "course.lib"
+#INCLUDE "ss.module"
+
+PROTOCOL print IS INT;INT:
+VAL INT null IS -1:
+VAL INT nbNode IS 4:
+VAL INT nbTour IS 4:
+
+PROC nodeInRing(CHAN OF print nodeChanIn, nodeChanOut, CHAN print screenChan, VAL INT id, VAL INT number)
+  INT idCurr:
+  INT value:
+  INT value2:
+  INT leader:
+  INT cpt:
+  INT msg:
+  BOOL isLeader:
+  SEQ
+    msg := number
+    isLeader := FALSE
+    SEQ i = 0 FOR nbTour
+      SEQ
+        PAR
+          nodeChanIn ? value;value2
+          nodeChanOut ! msg;null
+        IF
+          value = number
+            isLeader := TRUE
+          value < number
+            msg := null
+          value > number
+            msg := value
+        IF
+          isLeader = TRUE
+            screenChan ! 1;value
+          TRUE
+            screenChan ! 0;value        
+    PAR
+      nodeChanIn ? value; value2
+      nodeChanOut ! null;null
+    IF 
+      isLeader = TRUE
+        SEQ
+          leader := number
+          msg := leader
+      TRUE
+        SEQ
+          msg := null
+          leader := null
+    SEQ i = 0 FOR nbTour
+      SEQ
+        PAR
+          nodeChanIn ? value;value2
+          nodeChanOut ! msg;null
+        IF
+          value <> null
+            SEQ
+              leader := value
+          TRUE
+            SKIP
+        msg := leader
+        screenChan ! null;leader
+:
+
+PROC ringScreen([] CHAN OF print screenChan, CHAN OF BYTE screen)
+  INT cpt:
+  INT num:
+  INT tour:
+  SEQ 
+    tour := SIZE screenChan
+    tour := tour * nbTour
+    SEQ j = 0 FOR tour
+      ALT i = 0 FOR SIZE screenChan
+        screenChan[i] ? cpt;num
+          SEQ
+            fg.col(bold.black, screen!)
+            out.string("Noeud n ", 0, screen!)
+            fg.col(bold.red, screen!)
+            out.int(i, 0, screen!)
+            out.string(" : ", 0, screen!)
+            fg.col(bold.blue, screen!)
+            IF
+              cpt = 0
+                out.string("NOT ", 0, screen!)
+              TRUE
+                SEQ
+                  fg.col(bold.red, screen!)
+                  out.string("    ", 0, screen!)
+            out.string("LEADER : ", 0, screen!)
+            fg.col(bold.green, screen!)
+            out.int(num, 0, screen!)
+            out.string("*n", 0, screen!)
+            fg.col(black, screen!)    
+    out.string("NOEUD ELU*n", 0, screen!)
+    SEQ j = 0 FOR tour - 1
+      ALT i = 0 FOR SIZE screenChan
+        screenChan[i] ? cpt;num
+          SEQ
+            fg.col(bold.black, screen!)
+            out.string("Noeud n ", 0, screen!)
+            fg.col(bold.red, screen!)
+            out.int(i, 0, screen!)
+            out.string(" : ", 0, screen!)
+            fg.col(bold.blue, screen!)
+            out.string("LEADER IS : ", 0, screen!)
+            fg.col(bold.green, screen!)
+            out.int(num, 0, screen!)
+            out.string("*n", 0, screen!)
+            fg.col(black, screen!)
+:
+
+PROC systeme(CHAN OF BYTE screen)
+  INT tempo:
+  [nbNode] CHAN print screenChan:
+  [nbNode] CHAN print nodeChan: 
+  PAR
+    PAR i = 0 FOR nbNode
+      IF
+        i = (nbNode - 1)
+          nodeInRing(nodeChan[i], nodeChan[0], screenChan[i], i, i + 9)
+        TRUE
+          nodeInRing(nodeChan[i], nodeChan[i + 1], screenChan[i], i, i)
+    ringScreen(screenChan, screen)  
+:

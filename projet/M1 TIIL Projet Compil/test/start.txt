@@ -1,0 +1,1 @@
+./initSiDo.sh . testProjet result

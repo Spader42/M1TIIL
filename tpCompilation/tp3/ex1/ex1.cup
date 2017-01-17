@@ -1,0 +1,38 @@
+//Spécification JCup
+import java_cup.runtime.*;
+
+parser code {:
+    //Insérer le main du parser.java
+    public static void main(String args[]) throws Exception {
+        new parser(new Yylex(System.in)).parse();
+    }
+:}
+
+//Déclaration, initialisation, autre founction utilitaires etc...
+action code {:
+
+:}
+
+//Zone de définition de la grammaire
+terminal PLUS, MOINS, DIV, MULT, LP, RP, NL;
+terminal Integer NB;
+
+non terminal axiome, expr_list, expr_part;
+non terminal Integer expr;
+
+precedence left MOINS, PLUS;
+precedence left MULT, DIV;
+
+axiome ::= expr_list {: System.out.println("Fin de l'analyse."); :}
+    | {: System.out.println("Entree vide !"); :};
+    
+expr_list ::= expr_list expr_part | expr_part;
+
+expr_part ::= expr:e NL {: System.out.println(" = " + e); :};
+
+expr ::= NB:n {: RESULT = n; :}
+    | expr:l PLUS expr:r {: RESULT = new Integer(l + r); :}
+    | expr:l MOINS expr:r {: RESULT = new Integer(l - r); :}
+    | expr:l DIV expr:r {: RESULT = new Integer(l / r); :}
+    | expr:l MULT expr:r {: RESULT = new Integer(l * r); :}
+    | LP expr:e RP {: RESULT = e; :};

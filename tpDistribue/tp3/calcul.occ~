@@ -1,0 +1,70 @@
+#INCLUDE "consts.inc"
+#USE "course.lib"
+
+VAL INT Tmult IS 5:
+VAL INT Tadd IS 1:
+VAL INT PASTEMPS IS 10000:
+
+--procedure de temporisation
+PROC Tempo (VAL INT pas)
+  TIMER clock :
+  INT timeNow :
+  INT timeToWait :
+  SEQ
+    clock ? timeNow
+    timeToWait := timeNow + (pas*PASTEMPS)
+    clock ? AFTER timeToWait
+:
+
+PROC add(VAL INT a,b, INT res) 
+  SEQ
+    Tempo(Tadd)
+    res := a+b
+:    
+    
+PROC mult(VAL INT a,b, INT res) 
+  SEQ
+    Tempo(Tmult)
+    res := a*b
+:   
+
+PROC calcul (CHAN OF INT vIn,wIn,yOut)
+  INT a1,a2,a3,v,w,x,y:
+  SEQ
+    PAR
+      vIn ? v
+      wIn ? w
+    PAR 
+      SEQ
+        add(w,3,a1)
+        mult(a1,a1,a2)
+    PAR
+      SEQ
+        mult(v,6,a3)
+        add(a3,a3,x)
+    mult(x,a2,y)
+    
+    yOut ! y
+:  
+
+PROC systeme (CHAN OF BYTE keyboard, screen, error)  
+  INT y:
+  CHAN OF INT vChan,wChan,yChan:
+  TIMER clock :
+  INT timeInit:
+  INT timeEnd :
+  INT timeDiff:
+  PAR
+    calcul(vChan,wChan,yChan)
+    SEQ
+      clock ? timeInit
+      PAR
+        vChan ! 2
+        wChan ! 1
+      yChan ? y
+      clock ? timeEnd
+      timeDiff := (timeEnd - timeInit)/PASTEMPS
+      out.number (y, 5, screen)
+      out.number (timeDiff, 10, screen)
+      screen ! '*n'
+:

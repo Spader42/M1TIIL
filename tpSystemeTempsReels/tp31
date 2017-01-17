@@ -1,0 +1,72 @@
+CPN Tools state space report for:
+/cygdrive/H/tp/tpSystemeTempsReels/tp3.cpn
+Report generated: Fri Oct 21 11:47:38 2016
+
+
+ Statistics
+------------------------------------------------------------------------
+
+  State Space
+     Nodes:  2
+     Arcs:   2
+     Secs:   0
+     Status: Full
+
+  Scc Graph
+     Nodes:  1
+     Arcs:   0
+     Secs:   0
+
+
+ Boundedness Properties
+------------------------------------------------------------------------
+
+  Best Integer Bounds
+                             Upper      Lower
+     rdp'VersA 1             1          0
+     rdp'VersB 1             1          0
+
+  Best Upper Multi-set Bounds
+     rdp'VersA 1         1`c
+     rdp'VersB 1         1`c
+
+  Best Lower Multi-set Bounds
+     rdp'VersA 1         empty
+     rdp'VersB 1         empty
+
+
+ Home Properties
+------------------------------------------------------------------------
+
+  Home Markings
+     Initial Marking is a home marking
+
+
+ Liveness Properties
+------------------------------------------------------------------------
+
+  Dead Markings
+     None
+
+  Dead Transition Instances
+     None
+
+  Live Transition Instances
+     All
+
+
+ Fairness Properties
+------------------------------------------------------------------------
+
+  Impartial Transition Instances
+     rdp'EnA 1
+     rdp'EnB 1
+
+  Fair Transition Instances
+     None
+
+  Just Transition Instances
+     None
+
+  Transition Instances with No Fairness
+     None

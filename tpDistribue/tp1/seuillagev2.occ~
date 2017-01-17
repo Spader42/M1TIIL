@@ -1,0 +1,41 @@
+#USE "course.lib"
+
+
+PROC source (CHAN OF INT sourceToSeuillage)
+  SEQ
+    VAL [] INT image IS [4, 10, 9, 1, 56, 17, 20]:
+    WHILE TRUE
+      SEQ i = 5 FOR (SIZE image) - 5
+        sourceToSeuillage ! image[i] 
+:
+
+PROC seuillage (CHAN OF INT sourceToSeuillage, CHAN OF BOOL seuillageToAffichage, VAL INT seuil)
+  SEQ
+    INT tempo:
+    WHILE TRUE
+      SEQ
+        sourceToSeuillage ? tempo
+        IF 
+          tempo > seuil
+            seuillageToAffichage ! TRUE
+          TRUE
+            seuillageToAffichage ! FALSE
+:
+
+PROC affichage (CHAN OF BYTE screen, CHAN OF BOOL seuillageToAffichage)
+  SEQ
+    BOOL tempo:
+    WHILE TRUE
+      SEQ
+        seuillageToAffichage ? tempo
+        out.bool(tempo, 0, screen)
+:
+
+PROC systeme (CHAN OF BYTE keyboard, screen, error)
+  CHAN OF BOOL seuillageToAffichage:
+  CHAN OF INT sourceToSeuillage:
+  PAR
+    source(sourceToSeuillage)
+    seuillage(sourceToSeuillage, seuillageToAffichage, 10)
+    affichage(screen, seuillageToAffichage)
+:

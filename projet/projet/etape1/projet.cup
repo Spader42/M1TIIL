@@ -1,0 +1,189 @@
+// Specification JCup
+import java_cup.runtime.*;
+import java.util.*;
+import java.io.*;
+
+parser code {:
+	public static void main(String args[]) throws Exception {
+		new parser(new Yylex(System.in)).parse();
+	}
+:}
+
+
+terminal 
+//Appareils
+ECLAIRAGE,
+VOLET,
+CHAUFFAGE,
+ALARME,
+FENETRE,
+AUTRE_APPAREIL,
+INTERRUPTEUR,
+MOBILE,
+TELEPHONE,
+TELECOMMANDE,
+TABLETTE,
+TV,
+HIFI,
+CAFETIERE,
+VIDEO_PROJ,
+LAVE_VAISSELLE,
+LAVE_LINGE,
+SECHE_LINGE,
+ORDINATEUR,
+PORTAIL,
+
+//Etats appareils
+ALLUME,
+ETEINT,
+DEMI,
+ECO,
+OUVERT,
+FERME,
+
+//Methodes appareils
+OUVRIR,
+FERMER,
+ETEINDRE,
+ALLUMER,
+TAMISER,
+ETAT,
+ALLUMER_PARTIEL,
+ALLUMER_ECO,
+OUVRIR_PARTIEL,
+FERMER_PARTIEL,
+
+//Instructions
+POURTOUT,
+FAIRE,
+FAIT,
+SI,
+ALORS,
+SINON,
+FSI,
+
+//Fonctions DOMUS
+DEFINIR,
+EXECUTER_SCENARIO,
+ASSOCIER,
+PROGRAMMER,
+MESSAGE,
+
+//Balises MODUS
+PROGRAMME_DOMUS,
+DECLARATION_APPAREILS,
+DECLARATION_INTERFACES,
+DECLARATION_SCENARII,
+DECLARATION_COMMANDES,
+SCENARIO,
+
+//Operateurs
+PAR_GAUCHE,
+PAR_DROITE,
+ACO_GAUCHE,
+ACO_DROITE,
+AFFECTATION,
+EGALITE,
+POINT_VIRGULE,
+CHEVRON_GAUCHE,
+CHEVRON_DROIT,
+SLASH,
+UNDERSCORE,
+POINT,
+VIRGULE,
+DEUX_POINT,
+
+// qqs exemples de règles lexicales légales...
+ENTIER,
+IDENTIFIANT,
+ESPACE,
+FIN_LIGNE; 
+
+
+terminal String CHAINE, COMMENTAIRE;
+
+non terminal prog, list_token, token;
+
+prog ::=
+    list_token {: System.out.println("Analyse terminée."); :}
+    | {: System.out.println("Fichier vide."); :};
+
+list_token ::=
+    token list_token
+    | token;
+    
+token ::= 
+        CHAINE:text       {: System.out.println("Reconnaissance : chaine : " + text); :} 
+       |  ECLAIRAGE         {: System.out.println("Reconnaissance : eclairage"); :}
+       | VOLET             {: System.out.println("Reconnaissance : volet"); :}
+       | CHAUFFAGE         {: System.out.println("Reconnaissance : chaufage");:}
+       | ALARME            {: System.out.println("Reconnaissance : alarme"); :}
+       | FENETRE           {: System.out.println("Reconnaissance : fenetre"); :}
+       | AUTRE_APPAREIL    {: System.out.println("Reconnaissance : autre_appareil"); :}
+       | INTERRUPTEUR      {: System.out.println("Reconnaissance : interrupteur"); :}
+       | MOBILE            {: System.out.println("Reconnaissance : mobile"); :}
+       | TELEPHONE         {: System.out.println("Reconnaissance : telephone"); :}
+       | TELECOMMANDE      {: System.out.println("Reconnaissance : telecommande"); :}
+       | TABLETTE          {: System.out.println("Reconnaissance : tablette"); :}
+       | TV                {: System.out.println("Reconnaissance : tv"); :}
+       | HIFI              {: System.out.println("Reconnaissance : hifi"); :}
+       | CAFETIERE         {: System.out.println("Reconnaissance : cafetiere"); :}
+       | VIDEO_PROJ        {: System.out.println("Reconnaissance : video_proj"); :}
+       | LAVE_VAISSELLE    {: System.out.println("Reconnaissance : lave_vaisselle"); :}
+       | LAVE_LINGE        {: System.out.println("Reconnaissance : lave_linge"); :}
+       | SECHE_LINGE       {: System.out.println("Reconnaissance : seche_linge"); :}
+       | ORDINATEUR        {: System.out.println("Reconnaissance : ordinateur"); :}
+       | PORTAIL           {: System.out.println("Reconnaissance : portail"); :}
+       | ALLUME      {: System.out.println("Reconnaissance : allume"); :}
+       | ETEINT    {: System.out.println("Reconnaissance : eteint"); :}
+       | DEMI      {: System.out.println("Reconnaissance : demi"); :}
+       | ECO       {: System.out.println("Reconnaissance : eco"); :}
+       | OUVERT    {: System.out.println("Reconnaissance : ouvert"); :}
+       | FERME     {: System.out.println("Reconnaissance : ferme"); :}
+       |  OUVRIR            {: System.out.println("Reconnaissance : ouvrir"); :}
+       |  FERMER            {: System.out.println("Reconnaissance : fermer"); :}
+       | ETEINDRE          {: System.out.println("Reconnaissance : eteindre"); :}
+       |  ALLUMER           {: System.out.println("Reconnaissance : allumer"); :}
+       |  TAMISER           {: System.out.println("Reconnaissance : tamiser"); :}
+       |  ETAT              {: System.out.println("Reconnaissance : etat"); :}
+       |  ALLUMER_PARTIEL   {: System.out.println("Reconnaissance : allumer_partiel"); :}
+       |  ALLUMER_ECO       {: System.out.println("Reconnaissance : allumer_eco"); :}
+       |  OUVRIR_PARTIEL    {: System.out.println("Reconnaissance : ouvrir_partiel"); :}
+       |  FERMER_PARTIEL    {: System.out.println("Reconnaissance : fermer_partiel"); :}
+       |  POURTOUT  {: System.out.println("Reconnaissance : pourtout"); :}
+       |  FAIRE     {: System.out.println("Reconnaissance : faire"); :}
+       |  FAIT      {: System.out.println("Reconnaissance : fait"); :}
+       |  SI        {: System.out.println("Reconnaissance : si"); :}
+       |  ALORS     {: System.out.println("Reconnaissance : alors"); :}
+       |  SINON     {: System.out.println("Reconnaissance : sinon"); :}
+       |  FSI       {: System.out.println("Reconnaissance : fsi"); :}
+       |  DEFINIR               {: System.out.println("Reconnaissance : definir"); :}
+       |  EXECUTER_SCENARIO     {: System.out.println("Reconnaissance : executer_scenario"); :}
+       |  ASSOCIER              {: System.out.println("Reconnaissance : associer"); :}
+       |  PROGRAMMER            {: System.out.println("Reconnaissance : programmer"); :}
+       |  MESSAGE               {: System.out.println("Reconnaissance : message"); :}
+       |  PROGRAMME_DOMUS           {: System.out.println("Reconnaissance : PROGRAMME_DOMUS"); :}
+       |  DECLARATION_APPAREILS   {: System.out.println("Reconnaissance : DECLARATION_APPAREILS"); :}
+       |  DECLARATION_INTERFACES  {: System.out.println("Reconnaissance : DECLARATION_INTERFACES"); :}
+       |  DECLARATION_SCENARII    {: System.out.println("Reconnaissance : DECLARATION_SCENARII"); :}
+       |  DECLARATION_COMMANDES   {: System.out.println("Reconnaissance : DECLARATION_COMMANDES"); :}
+       |  SCENARIO                {: System.out.println("Reconnaissance : SCENARIO"); :}
+       |  COMMENTAIRE:n       {: System.out.println("Reconnaissance : commentaire : \"" + n + "\""); :}
+       |  PAR_GAUCHE        {: System.out.println("Reconnaissance : ("); :}
+       |  PAR_DROITE        {: System.out.println("Reconnaissance : )"); :}
+       |  ACO_GAUCHE        {: System.out.println("Reconnaissance : {:"); :}
+       |  ACO_DROITE        {: System.out.println("Reconnaissance : }"); :}
+       |  EGALITE           {: System.out.println("Reconnaissance : =="); :}
+       |  AFFECTATION       {: System.out.println("Reconnaissance : ="); :}
+       |  POINT_VIRGULE     {: System.out.println("Reconnaissance : ;"); :}
+       |  CHEVRON_GAUCHE    {: System.out.println("Reconnaissance : <"); :}
+       |  CHEVRON_DROIT     {: System.out.println("Reconnaissance : >"); :}
+       |  SLASH             {: System.out.println("Reconnaissance : /"); :}
+       |  UNDERSCORE        {: System.out.println("Reconnaissance : _"); :}
+       |  POINT             {: System.out.println("Reconnaissance : ."); :}
+       |  VIRGULE           {: System.out.println("Reconnaissance : ,"); :}
+       |  DEUX_POINT        {: System.out.println("Reconnaissance : :"); :}
+       |  ENTIER:entier    {: System.out.println("Reconnaissance : entier : \"" + entier + "\""); :}
+       |  IDENTIFIANT:ident     {: System.out.println("Reconnaissance : identifiant : \"" + ident + "\""); :}
+       |  ESPACE    {: System.out.println("Reconnaissance : espace"); :}
+       |  FIN_LIGNE  {:  :};

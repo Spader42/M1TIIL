@@ -1,0 +1,21 @@
+import java_cup.runtime.*;
+
+parser code {:
+    public static void main(String args[]) throws Exception {
+        new parser(new Yylex(System.in)).parse();
+    }
+:}
+
+action code {:
+    String str = new String("");
+:}
+
+terminal String STRING;
+non terminal expr, list_nb;
+
+expr        ::= list_nb {:  System.out.println(" Analyse terminée ! ");
+                            System.out.println(" Texte modifié : " + str);
+                         :}
+              | {: System.out.println(" Entree vide ! "); :};
+list_nb     ::= STRING:n {: str += n;:} list_nb
+              | STRING:n {: str += n;:};

@@ -1,0 +1,8 @@
+
+public class OpenedClosedHashDict<K, V> extends ClosedHashDict<K, V>{
+
+	public OpenedClosedHashDict(int capacity) {
+		super(capacity);
+	}
+
+}

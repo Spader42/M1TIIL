@@ -1,0 +1,93 @@
+
+public class OpenedClosedHashDict<K, V> extends ClosedHashDict<K, V>{
+
+	int capacity;
+	public OpenedClosedHashDict(int capacity) {
+		super(capacity);
+		this.capacity = capacity;
+	}
+	
+	public int capacity() {
+		return this.table.length;
+	}
+	private void augmenterTaille(){
+		Entry<K, V> [] newTable = new EntryHashDict[this.table.length + capacity];
+		for(int i = 0; i < this.table.length; i++) {
+			newTable[i] = this.table[i];
+		}
+		this.table = newTable;
+	}
+	
+	private void reduireTaille(){
+		if(this.table.length == capacity)
+			return;
+		System.out.println(table.length);
+		Entry<K, V> [] newTable = new EntryHashDict[this.table.length - capacity];
+		for(int i = 0; i < newTable.length; i++) {
+			System.out.println(table.length);
+
+			newTable[i] = this.table[i];
+		}
+		this.table = newTable;
+	}
+	@Override
+	public V put(K key, V value) {
+		if(this.size == this.table.length)
+			return null;
+		
+		Entry<K, V> newEntry = new EntryHashDict<K, V>(key, value);
+		
+		int pos = Math.abs(key.hashCode()) % table.length;
+		
+		boolean boucle = false;
+		for(int i = pos; i < table.length; i++) {
+			//Si on revient à la position de départ on stop
+			if(i == pos && boucle)
+				return null;
+			//Si la clé existe déjà
+			if(table[i] != null && table[i].getKey().equals(key)){
+				table[i].setValue(value);
+				return table[i].getValue();
+			}
+			if(table[i] == null) {
+				table[i] = newEntry;
+				this.size++;
+				if(this.size == this.table.length){
+					this.augmenterTaille();
+				}
+				return table[i].getValue();
+			}
+			// Si on arrive à la fin on revient au début
+			if(i == table.length - 1){
+				i = 0;
+				boucle = true;
+			}
+		}
+		return null;
+	}
+	
+	@Override
+	public V remove(K key) {
+		int pos = Math.abs(key.hashCode()) % table.length;
+		boolean boucle = false;
+		for(int i = pos; i < table.length; i++){
+			if(i == pos && boucle)
+				return null;
+			if(table[i] != null && table[i].getKey().equals(key)){
+				Entry<K, V> res = table[i];
+				table[i] = null;
+				size--;
+				if(this.table.length - size == capacity + 1) {
+					System.out.println("B");
+					this.reduireTaille();
+				}
+				return res.getValue();
+			}
+			if(i == table.length - 1){
+				boucle = true;
+				i = 0;
+			}
+		}
+		return null;
+	}
+}

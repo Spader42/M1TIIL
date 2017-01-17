@@ -1,0 +1,64 @@
+V "GNAT Lib v4.6"
+M P W=b
+A -g
+P SS ZX
+R nnnnnnnnnnnnnnnnnnnnnnnnvvnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn
+
+U flottant%b		flottant.adb		4805a2e8 NE OO SU
+W mes_io%s		mes_io.ads		mes_io.ali
+W text_io%s		text_io.ads		text_io.ali
+
+D ada.ads		20070406091342 3ffc8e18
+D a-except.ads		20090727140100 0c711ac9
+D a-finali.ads		20090409150019 e5e85fa4
+D a-filico.ads		20090409150019 872dc219
+D a-ioexce.ads		20091130110856 8b9de6cd
+D a-stream.ads		20090409150019 2ca4ee37
+D a-tags.ads		20101021101406 c7695348
+D a-textio.ads		20091028140912 386df5d4
+D a-tiflio.ads		20090409150019 56fbda09
+D a-tiinio.ads		20090409150019 aa04e5d6
+D a-unccon.ads		20070406091342 f9eb8f06
+D flottant.adb		20161109083750 0ebb12d1
+D interfac.ads		20090409150019 f77d8799
+D i-cstrea.ads		20100622165701 1bd72c32
+D mes_io.ads		20161109083816 036896f0
+D system.ads		20140416172229 23e1f70b
+D s-crtl.ads		20100617122610 ac77b159
+D s-exctab.ads		20090417131547 66e51330
+D s-ficobl.ads		20100909103250 443b9d66
+D s-finimp.ads		20090409150019 46853fe8
+D s-finroo.ads		20090409150019 dbb860c9
+D s-parame.ads		20091130110856 9c5d83fa
+D s-secsta.ads		20090707124243 eea35a36
+D s-soflin.ads		20090729085153 9414c974
+D s-stache.ads		20090417130712 596fc1b4
+D s-stalib.ads		20101021102512 c4241c00
+D s-stoele.ads		20090417130712 facd7d98
+D s-stoele.adb		20100617152355 afc5dc80
+D s-stratt.ads		20100909123135 aedef97e
+D s-traent.ads		20090417130712 5221ee41
+D s-unstyp.ads		20090409150019 6ae15c76
+D s-wchcon.ads		20090417130712 bfeb2e3d
+D text_io.ads		20070406091342 45d626c9
+X 8 a-textio.ads
+167U14*New_Line 12|29s21 33s21 36s21 39s21 42s21
+243U14*Put 12|27s21 31s21 34s21 37s21 40s21
+264U14*Put_Line 12|17s17
+X 9 a-tiflio.ads
+56U14*Get 12|18s17[15|6]
+67U14*Put 12|28s29[15|6] 32s29[15|6] 35s29[15|6] 38s29[15|6] 41s29[15|6]
+X 12 flottant.adb
+8U11*Flottant 8b11 57l5 57t13
+9f5 max{float} 21m21 38r33 46r19 47m18
+10f5 min{float} 22m21 41r33 50r19 51m18
+11f5 somme{float} 19r12 20m21 23m21 23r30 28r33 30m21 30r30 35r33
+12f5 curr{float} 18m21 20r32 21r32 22r32 23r38 26r12 46r12 47r25 50r12 51r25
+. 55r19
+13f5 n{float} 30r38 32r33 54m9 54r14
+X 15 mes_io.ads
+4K9*mes_io 12|5w6 6r5 15|7e11
+6K13*floatio[9|45] 12|18r9 28r21 32r21 35r21 38r21 41r21
+X 33 text_io.ads
+24K9*Text_IO=24:29 12|2w6 3r5 17r9
+

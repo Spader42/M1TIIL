@@ -1,0 +1,18 @@
+%%
+%class lexer
+%unicode
+%int
+%standalone
+%line
+%column
+
+%{
+int nb = 0;
+%}
+
+%eof{
+System.out.println("Nombre de caracteres ignores : "+nb);
+System.out.println("Fin de l'annalyse lexicale");
+
+%%
+(0|1)+ { System.out.println("Un nombre binaire : "+yytext()); }

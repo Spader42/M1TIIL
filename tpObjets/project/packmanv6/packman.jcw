@@ -1,0 +1,22 @@
+! ** JCreator Workspace File (C)2000
+! ********** DO NOT EDIT *********
+
+VERSION := "1.00"
+LABEL := "packman"
+
+! Start Project Structure
+#[BeginProject]SOURCE := "packman.jcp" #[EndProject]
+
+! Start Last Document Structure
+#[BeginFile]SOURCE := "PackManGame.java" #[EndFile]
+#[BeginFile]SOURCE := "PackManObject.java" #[EndFile]
+#[BeginFile]SOURCE := "PackMan.java" #[EndFile]
+#[BeginFile]SOURCE := "AnimatedObject.java" #[EndFile]
+#[BeginFile]SOURCE := "Ani.java" #[EndFile]
+#[BeginFile]SOURCE := "Cell.java" #[EndFile]
+#[BeginFile]SOURCE := "Wall.java" #[EndFile]
+#[BeginFile]SOURCE := "Food.java" #[EndFile]
+#[BeginFile]SOURCE := "Monster.java" #[EndFile]
+
+! Start Breakpoint Structure
+

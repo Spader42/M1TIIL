@@ -1,0 +1,31 @@
+! ** JCreator Project File (C)2000
+! ********** DO NOT EDIT *********
+
+VERSION := "1.10"
+LABEL := "packman"
+JDKPROFILE := ""
+ACTIVE := "1"
+OUTPUTPATH := ".\\"
+COMPILER := ""
+
+! Start RunTime Configuration Structure
+#[BeginRunTime]LABEL := "<Default>" RUNAPPLIC := "" RUNAPPLET := "" PARAM := "" RUN := "PackMan.html" CHECK := "10" #[EndRunTime]
+! Start Required Libraries Structure
+
+! Start Project Folder Structure
+#[BeginFolder]
+LABEL := "Root"
+FILTER := ""
+
+#[BeginFile]SOURCE := "Monster.java" #[EndFile]
+#[BeginFile]SOURCE := "Ani.java" #[EndFile]
+#[BeginFile]SOURCE := "AnimatedObject.java" #[EndFile]
+#[BeginFile]SOURCE := "Cell.java" #[EndFile]
+#[BeginFile]SOURCE := "GameWorld.java" #[EndFile]
+#[BeginFile]SOURCE := "PackMan.java" #[EndFile]
+#[BeginFile]SOURCE := "PackManGame.java" #[EndFile]
+#[BeginFile]SOURCE := "PackManObject.java" #[EndFile]
+#[BeginFile]SOURCE := "Wall.java" #[EndFile]
+#[BeginFile]SOURCE := "PackMan.html" #[EndFile]
+#[BeginFile]SOURCE := "Food.java" #[EndFile]
+#[EndFolder]

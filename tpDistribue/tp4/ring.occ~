@@ -1,0 +1,121 @@
+#USE "course.lib"
+#INCLUDE "ss.module"
+
+PROTOCOL print IS INT;INT:
+VAL INT null IS -1:
+VAL INT nbNode IS 4:
+VAL INT nbTour IS 4:
+
+PROC nodeInRing(CHAN OF print nodeChanIn, nodeChanOut, CHAN print screenChan, VAL INT id, VAL INT number)
+  INT idCurr:
+  INT value:
+  INT value2:
+  INT leader:
+  INT cpt:
+  INT msg:
+  BOOL isLeader:
+  SEQ
+    msg := number
+    isLeader := FALSE
+    SEQ i = 0 FOR nbTour
+      SEQ
+        PAR
+          nodeChanIn ? value;value2
+          nodeChanOut ! msg;null
+        IF
+          value = number
+            isLeader := TRUE
+          value < number
+            msg := null
+          value > number
+            msg := value
+        IF
+          isLeader = TRUE
+            screenChan ! 1;value
+          TRUE
+            screenChan ! 0;value        
+    PAR
+      nodeChanIn ? value; value2
+      nodeChanOut ! null;null
+    IF 
+      isLeader = TRUE
+        SEQ
+          leader := number
+          msg := leader
+      TRUE
+        SEQ
+          msg := null
+          leader := null
+    SEQ i = 0 FOR nbTour
+      SEQ
+        PAR
+          nodeChanIn ? value;value2
+          nodeChanOut ! msg;null
+        IF
+          value <> null
+            SEQ
+              leader := value
+          TRUE
+            SKIP
+        msg := leader
+        screenChan ! null;leader
+:
+PROC routeur (VAL INT id, [] CHAN OF TABROUTE in, [] CHAN OF TABROUTE out,CHAN OF TABROUTE screenOut )
+  TABROUTE tableLoc:
+  [maxVois] TABROUTE tableVois:
+  SEQ
+    SEQ i = 0 FOR SIZE tableLoc
+      SEQ
+        IF
+          id = i
+            tableLoc[i][cout] := 0
+          TRUE
+            tableLoc[i][cout] := infini
+        tableLoc[i][indVois] := -1
+      
+    SEQ i = 0 FOR SIZE tableVois
+      SEQ j = 0 FOR SIZE tableVois[i]
+        SEQ
+          IF
+            id = i
+              tableLoc[i][cout] := 0
+            TRUE
+              tableLoc[i][cout] := infini
+          tableLoc[i][indVois] := -1
+                
+    WHILE TRUE
+      SEQ
+        --communications
+        PAR
+          PAR i = 0 FOR SIZE out
+            out[i] ! tableLoc
+          PAR i = 0 FOR SIZE in
+            in[i] ? tableVois[i]
+        --changement d'etat de la table locale
+        SEQ i = 0 FOR SIZE in
+          SEQ j = 0 FOR SIZE tableVois[i]
+            SEQ
+              IF
+                tableLoc[j][cout] > (tableVois[i][j][cout] + 1)
+                  SEQ
+                    tableLoc[j][cout] := (tableVois[i][j][cout] + 1)
+                    tableLoc[j][indVois] := i
+                TRUE
+                  SKIP
+        --affichage de la table locale
+        screenOut ! tableLoc
+: 
+
+PROC systeme(CHAN OF BYTE screen)
+  INT tempo:
+  [nbNode] CHAN print screenChan:
+  [nbNode] CHAN print nodeChan: 
+  PAR
+    PAR i = 0 FOR nbNode
+      IF
+        i = (nbNode - 1)
+          nodeInRing(nodeChan[i], nodeChan[0], screenChan[i], i, i + 9)
+        TRUE
+          nodeInRing(nodeChan[i], nodeChan[i + 1], screenChan[i], i, i)
+    ringScreen(screenChan, screen)  
+:

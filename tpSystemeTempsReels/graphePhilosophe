@@ -1,0 +1,95 @@
+CPN Tools state space report for:
+/cygdrive/H/tp/tpSystemeTempsReels/chinois.cpn
+Report generated: Fri Oct 21 11:41:49 2016
+
+
+ Statistics
+------------------------------------------------------------------------
+
+  State Space
+     Nodes:  26
+     Arcs:   51
+     Secs:   0
+     Status: Full
+
+  Scc Graph
+     Nodes:  2
+     Arcs:   3
+     Secs:   0
+
+
+ Boundedness Properties
+------------------------------------------------------------------------
+
+  Best Integer Bounds
+                             Upper      Lower
+     rdp'ABG 1               2          0
+     rdp'BaguetteDispo 1     3          0
+     rdp'Mange 1             1          0
+     rdp'Pense 1             3          0
+     rdp'aLaBaguetteDroite 1 3          0
+
+  Best Upper Multi-set Bounds
+     rdp'ABG 1           1`p1++
+1`p2++
+1`p3
+     rdp'BaguetteDispo 1 1`b1++
+1`b2++
+1`b3
+     rdp'Mange 1         1`p1++
+1`p2++
+1`p3
+     rdp'Pense 1         1`p1++
+1`p2++
+1`p3
+     rdp'aLaBaguetteDroite 1
+                         1`p1++
+1`p2++
+1`p3
+
+  Best Lower Multi-set Bounds
+     rdp'ABG 1           empty
+     rdp'BaguetteDispo 1 empty
+     rdp'Mange 1         empty
+     rdp'Pense 1         empty
+     rdp'aLaBaguetteDroite 1
+                         empty
+
+
+ Home Properties
+------------------------------------------------------------------------
+
+  Home Markings
+     [14]
+
+
+ Liveness Properties
+------------------------------------------------------------------------
+
+  Dead Markings
+     [14]
+
+  Dead Transition Instances
+     None
+
+  Live Transition Instances
+     None
+
+
+ Fairness Properties
+------------------------------------------------------------------------
+
+  Impartial Transition Instances
+     rdp'DeposeLaBaguetteDroite 1
+     rdp'DeposeLaBaguetteGauche 1
+     rdp'PrendsLaBaguetteDroite 1
+     rdp'PrendsLeBaguetteGauche 1
+
+  Fair Transition Instances
+     None
+
+  Just Transition Instances
+     None
+
+  Transition Instances with No Fairness
+     None

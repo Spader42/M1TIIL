@@ -1,0 +1,89 @@
+V "GNAT Lib v4.6"
+M P W=b
+A -g
+P SS ZX
+R nnnnnnnnnnnnnnnvnnvnnvnnnvvnnnnnnnnnnvnnnnnnvnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn
+
+U enum%b		enum.adb		11e90feb NE OO SU
+W ada%s			ada.ads			ada.ali
+W ada.exceptions%s	a-except.adb		a-except.ali
+W ada.tags%s		a-tags.adb		a-tags.ali
+W ada.text_io%s		a-textio.adb		a-textio.ali
+W ada.text_io.enumeration_aux%s  a-tienau.adb	a-tienau.ali
+W ada.text_io.enumeration_io%s
+W ada.text_io.integer_aux%s  a-tiinau.adb	a-tiinau.ali
+W ada.text_io.integer_io%s
+W system%s		system.ads		system.ali
+W system.exception_table%s  s-exctab.adb	s-exctab.ali
+W system.img_enum_new%s	s-imenne.adb		s-imenne.ali
+W system.soft_links%s	s-soflin.adb		s-soflin.ali
+W system.standard_library%s  s-stalib.adb	s-stalib.ali
+W system.val_enum%s	s-valenu.adb		s-valenu.ali
+W text_io%s		text_io.ads		text_io.ali
+
+D ada.ads		20070406091342 3ffc8e18
+D a-except.ads		20090727140100 0c711ac9
+D a-finali.ads		20090409150019 e5e85fa4
+D a-filico.ads		20090409150019 872dc219
+D a-ioexce.ads		20091130110856 8b9de6cd
+D a-stream.ads		20090409150019 2ca4ee37
+D a-tags.ads		20101021101406 c7695348
+D a-textio.ads		20091028140912 386df5d4
+D a-tienau.ads		20090409150019 6a9c157b
+D a-tienio.ads		20090409150019 fc618ae6
+D a-tienio.adb		20090409150019 847b34a6
+D a-tiinau.ads		20090409150019 8114c8e4
+D a-tiinio.ads		20090409150019 aa04e5d6
+D a-tiinio.adb		20091130162119 df9cd7af
+D a-unccon.ads		20070406091342 f9eb8f06
+D enum.adb		20161114102444 543f2922
+D interfac.ads		20090409150019 f77d8799
+D i-cstrea.ads		20100622165701 1bd72c32
+D system.ads		20140416172229 23e1f70b
+D s-crtl.ads		20100617122610 ac77b159
+D s-exctab.ads		20090417131547 66e51330
+D s-ficobl.ads		20100909103250 443b9d66
+D s-finimp.ads		20090409150019 46853fe8
+D s-finroo.ads		20090409150019 dbb860c9
+D s-imenne.ads		20090417131547 8707cbf0
+D s-parame.ads		20091130110856 9c5d83fa
+D s-secsta.ads		20090707124243 eea35a36
+D s-soflin.ads		20090729085153 9414c974
+D s-stache.ads		20090417130712 596fc1b4
+D s-stalib.ads		20101021102512 c4241c00
+D s-stoele.ads		20090417130712 facd7d98
+D s-stoele.adb		20100617152355 afc5dc80
+D s-stratt.ads		20100909123135 aedef97e
+D s-traent.ads		20090417130712 5221ee41
+D s-unstyp.ads		20090409150019 6ae15c76
+D s-valenu.ads		20090409150019 bb1a4295
+D s-wchcon.ads		20090417130712 bfeb2e3d
+D text_io.ads		20070406091342 45d626c9
+X 8 a-textio.ads
+167U14*New_Line 16|28s13
+243U14*Put 16|26s13
+264U14*Put_Line 16|15s13 18s21 31s13 33s13
+299X4*Data_Error 16|24r14
+X 10 a-tienio.ads
+46k21*Enumeration_IO 75e31 16|10r35
+52U14 Get 16|21s20[10]
+X 13 a-tiinio.ads
+45k21*Integer_IO 84e27 16|11r26
+65U14 Put 16|27s19[11]
+X 16 enum.adb
+4U11*Enum 4b11 37l5 37t9
+5E10 commandes 5e61 8r15 10r50
+5n24 a_droite{5E10}
+5n34 a_gauche{5E10}
+5n44 avancer{5E10}
+5n53 reculer{5E10}
+6i5 nbError{integer} 16r16 25m13 25r24 27r23
+7i5 nbErrorMax{integer}
+8e5 data{5E10} 21m24
+9X5 COMMANDE_UTILISATEUR 19r27 30r14
+10K13 enumio[10|46] 21r13
+11K13 intio[13|45] 27r13
+12U15 main 12b15 29s13 34l9 34t13 36s5
+X 38 text_io.ads
+24K9*Text_IO=24:29 16|1w6 2r5 10r27
+

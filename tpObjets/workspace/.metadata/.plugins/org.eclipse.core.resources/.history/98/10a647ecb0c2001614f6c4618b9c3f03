@@ -1,0 +1,4 @@
+
+public class OpenedClosedHashDict<K, V> extends ClosedHashDict<K, V>{
+
+}

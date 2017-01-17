@@ -1,0 +1,96 @@
+#USE "course.lib"
+#INCLUDE "ss.module"
+
+PROC source(CHAN OF INT out)
+  [255] INT image:
+  INT j:
+  INT nbMax:
+  SEQ
+    nbMax := 50
+    j := 0
+    WHILE TRUE
+      SEQ
+        SEQ i = 0 FOR SIZE image
+          SEQ
+            IF
+              j = nbMax
+                j := 0
+              TRUE
+                SKIP
+            image[i] := j
+            j := j + 1
+        image[(SIZE image) - 1] := (-1)
+        SEQ i = 0 FOR SIZE image
+          out ! image[i]
+    
+:
+
+PROC histoBloc(CHAN OF INT in, CHAN OF INT outHisto, CHAN OF INT outAffichage, VAL INT pixelValue, nbOccurence)
+  INT tempo:
+  INT occur:
+  INT pixel:
+  INT nbOccur:
+  SEQ
+    occur := 0
+    nbOccur := nbOccurence
+    pixel := pixelValue
+    
+    WHILE TRUE
+      SEQ
+        in ? tempo
+        IF
+          tempo <> pixelValue
+            outHisto ! tempo
+          tempo = pixelValue
+            occur := occur + 1
+          tempo = (-1)
+            SEQ
+              outAffichage ! pixel
+              outAffichage ! occur
+              occur := 0
+              outHisto ! (-1)
+          TRUE
+            SKIP
+        IF 
+          occur = nbOccur
+            SEQ
+              outAffichage ! pixel
+              outAffichage ! occur
+              occur := 0
+          TRUE
+            SKIP
+:
+
+PROC affichage([] CHAN OF INT in, CHAN OF BYTE screen)
+  INT pixel, value:
+  WHILE TRUE
+    ALT i = 0 FOR SIZE in
+      in[i] ? pixel
+        SEQ
+          in[i] ? value
+          
+          fg.col(bold.red, screen!)
+          out.int(pixel, 3, screen!)
+          
+          fg.col(bold.black, screen!)
+          out.string(" - ", 0, screen!)
+          
+          fg.col(bold.blue, screen!)
+          out.int(value, 2, screen!)
+          fg.col(black, screen!)
+:
+
+PROC systeme(CHAN OF BYTE screen)
+  VAL INT nbHisto IS 255:
+  VAL INT nbOccurences IS 10:
+  INT tempo:
+  [nbHisto + 1] CHAN INT tabHisto:
+  [nbHisto] CHAN INT tabAffiche:
+  PAR
+    source(tabHisto[0])
+    PAR i = 0 FOR nbHisto
+      histoBloc(tabHisto[i], tabHisto[i + 1], tabAffiche[i], i, nbOccurences)
+    affichage(tabAffiche, screen)
+    WHILE TRUE
+      tabHisto[nbHisto] ? tempo
+:

@@ -1,0 +1,1189 @@
+// Specification JCup
+import java_cup.runtime.*;
+import java.util.*;
+import java.io.*;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+
+import java.io.FileWriter;
+import java.io.File;
+import java.io.BufferedWriter;
+import java.io.IOException;
+
+parser code {:
+	public static void main(String args[]) throws Exception {
+		new parser(new Yylex(System.in)).parse();
+	}
+:}
+
+action code {:
+    class Date {
+        private int annee;
+        private int mois;
+        private int jour;
+        private int heure;
+        private int minute;
+        
+        public Date(int annee, int mois, int jour, int heure, int minute) {
+            this.annee  = annee;
+            this.mois   = mois;
+            this.jour   = jour;
+            this.heure  = heure;
+            this.minute = minute;
+        }
+        
+        public int getAnnee()   { return this.annee; }
+        public int getMois()    { return this.mois; }
+        public int getJour()    { return this.jour; }
+        public int getHeure()   { return this.heure; }
+        public int getMinute()  { return this.minute; }
+        
+        @Override
+        public String toString() {
+            return  this.annee +
+                    "/" + this.mois + 
+                    "/" + this.jour + 
+                    " " + this.heure +
+                    ":" + this.minute;
+        }
+    }
+    
+    class ProgramData {
+        private HashMap<String, ArrayList<String>> identScenario;
+        private HashMap<String, ArrayList<String>> temporalyIdent;
+        private HashMap<String, ArrayList<String>> identAppareil;
+        private HashMap<String, ArrayList<String>> identInterface;
+        private HashMap<String, ArrayList<String>> actionsAppareil;
+        private HashMap<String, ArrayList<String>> etatsAppareils;
+        private HashMap<String, ArrayList<Date>> programmationScenario;
+        private HashMap<String, ArrayList<String>> associationScenario;
+        
+        public ProgramData() {
+            this.identScenario          = new HashMap<String, ArrayList<String>>();
+            this.temporalyIdent         = new HashMap<String, ArrayList<String>>();
+            this.identAppareil          = new HashMap<String, ArrayList<String>>();
+            this.identInterface         = new HashMap<String, ArrayList<String>>();
+            this.actionsAppareil        = new HashMap<String, ArrayList<String>>();
+            this.etatsAppareils         = new HashMap<String, ArrayList<String>>();
+            this.programmationScenario  = new HashMap<String, ArrayList<Date>>();
+            this.associationScenario    = new HashMap<String, ArrayList<String>>();
+            
+            
+            ArrayList<String> actionEclairage       = new ArrayList<String>();
+            ArrayList<String> actionAlarme          = new ArrayList<String>();
+            ArrayList<String> actionChauffage       = new ArrayList<String>();
+            ArrayList<String> actionFenetre         = new ArrayList<String>();
+            ArrayList<String> actionVolet           = new ArrayList<String>();
+            ArrayList<String> actionAutreAppareil   = new ArrayList<String>();
+            
+            actionEclairage.add("etat");
+            actionEclairage.add("allumer");
+            actionEclairage.add("eteindre");
+            actionEclairage.add("tamiser");
+            
+            actionAlarme.add("etat");
+            actionAlarme.add("allumer");
+            actionAlarme.add("allumer_partiel");
+            actionAlarme.add("eteindre");
+            
+            actionChauffage.add("etat");
+            actionChauffage.add("allumer");
+            actionChauffage.add("allumer_eco");
+            actionChauffage.add("eteindre");
+            
+            actionFenetre.add("etat");
+            actionFenetre.add("ouvrir");
+            actionFenetre.add("ouvrir_partiel");
+            actionFenetre.add("fermer");
+            actionFenetre.add("fermer_partiel");
+            
+            actionVolet.add("etat");
+            actionVolet.add("ouvrir");
+            actionVolet.add("ouvrir_partiel");
+            actionVolet.add("fermer");
+            actionVolet.add("fermer_partiel");
+            
+            actionAutreAppareil.add("etat");
+            actionAutreAppareil.add("allumer");
+            actionAutreAppareil.add("eteindre");
+            
+            this.actionsAppareil.put("eclairage", actionEclairage);
+            this.actionsAppareil.put("alarme", actionAlarme);
+            this.actionsAppareil.put("chauffage", actionChauffage);
+            this.actionsAppareil.put("fenetre", actionFenetre);
+            this.actionsAppareil.put("volet", actionVolet);
+            this.actionsAppareil.put("autre_appareil", actionAutreAppareil);
+        }
+        
+        public HashMap<String, ArrayList<String>> getIdentScenario() { return this.identScenario; }
+        public HashMap<String, ArrayList<String>> getIdentAppareil() { return this.identAppareil; }
+        public HashMap<String, ArrayList<String>> getIdentInterface() { return this.identInterface; }
+        public HashMap<String, ArrayList<Date>> getProgrammationScenario() { return this.programmationScenario; }
+        public HashMap<String, ArrayList<String>> getAssociationScenario() { return this.associationScenario; }
+        
+        public void addIdentAppareil(String type, String ident) {
+            if(!this.identAppareil.containsKey(type)) {
+                this.identAppareil.put(type, new ArrayList<String>());
+                this.identAppareil.get(type).add(ident);
+            } else
+                this.identAppareil.get(type).add(ident);
+         }
+        
+        public void addIdentInterface(String type, String ident) {
+            if(!this.identInterface.containsKey(type)) {
+                this.identInterface.put(type, new ArrayList<String>());
+                this.identInterface.get(type).add(ident);
+            } else
+                this.identInterface.get(type).add(ident);
+        }
+        
+        /*public void addIdentScenario(String ident){
+            this.identScenario.put(ident, new ArrayList<String>());
+        }*/
+        
+        public void addScenarioContent(String content) {
+            if(!this.identScenario.containsKey(currentScenario))
+                this.identScenario.put(currentScenario, new ArrayList<String>());
+            
+            this.identScenario.get(currentScenario).add(content);
+        }
+        
+        public void addTemporalyIdent(String type, String ident) {
+            if(!this.temporalyIdent.containsKey(type)) {
+                this.temporalyIdent.put(type, new ArrayList<String>());
+                this.temporalyIdent.get(type).add(ident);
+            } else
+                this.temporalyIdent.get(type).add(ident);
+        }
+        
+        public void addScenarioDate(String ident, Date date) {
+            if(!this.programmationScenario.containsKey(ident)) {
+                this.programmationScenario.put(ident, new ArrayList<Date>());
+                this.programmationScenario.get(ident).add(date);
+            } else
+                this.programmationScenario.get(ident).add(date);
+        }
+        
+        public void addAssociationScenario(String ident, String scenario) {
+            if(!this.associationScenario.containsKey(ident)) {
+                this.associationScenario.put(ident, new ArrayList<String>());
+                this.associationScenario.get(ident).add(scenario);
+            } else
+                this.associationScenario.get(ident).add(scenario);
+        }
+        
+        public boolean hasIdentAppareil(String ident) {
+            Collection<ArrayList<String>> values = this.identAppareil.values();
+            Iterator<ArrayList<String>> itr = values.iterator();
+            while(itr.hasNext()) {
+                ArrayList<String> list = itr.next();
+                
+                Iterator<String> subItr = list.iterator();
+                while(subItr.hasNext())
+                    if(subItr.next().equals(ident))
+                        return true;
+            }
+            return false;
+        }
+        
+        public boolean hasTemporalyIdent(String ident) {
+            Collection<ArrayList<String>> values = this.temporalyIdent.values();
+            Iterator<ArrayList<String>> itr = values.iterator();
+            while(itr.hasNext()) {
+                ArrayList<String> list = itr.next();
+                
+                Iterator<String> subItr = list.iterator();
+                while(subItr.hasNext())
+                    if(subItr.next().equals(ident))
+                        return true;
+            }
+            return false;
+        }
+        
+        
+        public boolean hasIdentInterface(String ident) {
+            Collection<ArrayList<String>> values = this.identInterface.values();
+            Iterator<ArrayList<String>> itr = values.iterator();
+            while(itr.hasNext()) {
+                ArrayList<String> list = itr.next();
+                
+                Iterator<String> subItr = list.iterator();
+                while(subItr.hasNext())
+                    if(subItr.next().equals(ident))
+                        return true;
+            }
+            return false;
+        }
+        
+        public boolean hasIdentScenario(String ident) { return this.identScenario.containsKey(ident); }
+        
+        public boolean hasActionsAppareil(String appareil, String action) {
+            if(!this.actionsAppareil.containsKey(appareil))
+                return false;
+                
+            return this.actionsAppareil.get(appareil).contains(action);
+        }
+        
+        public boolean hasEtatsAppareils(String appareil, String etat) {
+            if(!this.actionsAppareil.containsKey(appareil))
+                return false;
+                
+            return this.actionsAppareil.get(appareil).contains(etat);
+        }
+        
+        public boolean hasAction(String ident, String action) {
+            if(!this.actionsAppareil.containsKey(ident))
+                return false;
+            return this.actionsAppareil.get(ident).contains(action);
+        }
+        
+        public String getType(String ident) {
+            for(String key : this.identAppareil.keySet())
+                if(this.identAppareil.get(key).contains(ident))
+                    return key;
+                    
+             for(String key : this.temporalyIdent.keySet())
+                if(this.temporalyIdent.get(key).contains(ident))
+                    return key;
+                    
+            return null;                
+        }
+    }
+    
+    
+    public void addIdentAppareil(String type, ArrayList<String> l) {
+        Iterator<String> itr = l.iterator();
+        while(itr.hasNext()) {
+            String ident = itr.next();
+            if(!data.hasIdentAppareil(ident))
+                data.addIdentAppareil(type, ident);
+            else
+                System.out.println("Erreur. L'identifiant d'apapreil \"" + ident + "\" existe déjà.");
+            
+        }
+    }
+    
+    public void addIdentInterface(String type, ArrayList<String> l) {
+        Iterator<String> itr = l.iterator();
+        while(itr.hasNext()) {
+            String ident = itr.next();
+            if(!data.hasIdentInterface(ident))
+                data.addIdentInterface(type, ident);
+            else
+                System.out.println("Erreur. L'identifiant d'interface \"" + ident + "\" existe déjà.");
+            
+        }
+    }
+    
+    public void addScenarioDate(String ident, ArrayList<Date> dates) {
+        if(!data.hasIdentScenario(ident)) {
+            System.out.println("Erreur. Le scenario \"" + ident + "\" n'existe pas.");
+            return;
+        }
+        
+        Iterator<Date> itr = dates.iterator();
+        while(itr.hasNext())
+            data.addScenarioDate(ident, itr.next());
+    }
+    
+    public void addAssociationScenario(String ident, ArrayList<String> scenarii) {
+        if(!data.hasIdentInterface(ident)) {
+            System.out.println("Erreur. L'interface \"" + ident + "\" n'existe pas, association impossible.");
+            return;
+        }
+        
+        Iterator<String> itr = scenarii.iterator();
+        while(itr.hasNext())
+            data.addAssociationScenario(ident, itr.next());
+    }
+    
+    
+    //============================================================//
+    //============================================================//
+    public void generateFiles() {
+        System.out.println("Génération des fichiers java...");
+        this.generateCMaisonUser();
+        this.generateHabitatSpecific();
+    }
+    
+    private void generateCMaisonUser() {
+        try {
+            System.out.println("Génération du fichier java CMaisonUSer");
+            
+            String fileName = "CMaisonUser.java";
+            
+            File file = new File(fileName);
+            
+            if(file.exists()) {
+                System.out.println("\tLe fichier \"" + fileName + "\" existe déjà.");
+                System.out.print("\tSuppression du fichier Java...");
+                if(file.delete())
+                    System.out.println("OK.");
+                else {
+                    System.out.println("Echec.");
+                    return;
+                }
+            } else {
+                System.out.println("\tLe fichier \"" + fileName + "\" n'existe pas.");
+                System.out.print("\tCréation du fichier...");
+                if(file.createNewFile())
+                    System.out.println("OK.");
+                else {
+                    System.out.println("Echec.");
+                    return;
+                }
+            }
+            
+            FileWriter fw = new FileWriter(file.getAbsoluteFile(), true);
+            BufferedWriter bw = new BufferedWriter(fw);
+            
+            
+            bw.write("//" + fileName + "\n\n");
+            bw.write("public class CMaisonUser extends CMaison {\n");
+            bw.write("    public CMaisonUser() {\n");
+            bw.write("        super();\n\n");
+            
+            //Ajout des appareils
+            HashMap<String, ArrayList<String>> identAppareil = data.getIdentAppareil();
+            bw.write("        //Appareils\n");       
+            for(String key : identAppareil.keySet()) {
+                ArrayList<String> list = identAppareil.get(key);
+                
+                String typeAppareil = "";
+                if(key.equals("volet"))
+                    typeAppareil = "CVoletFenetre";
+                else
+                    typeAppareil = "C" + key.substring(0, 1).toUpperCase() + key.substring(1);
+                
+                Iterator<String> subItr = list.iterator();
+                while(subItr.hasNext()) {
+                    String ident = subItr.next();
+                    bw.write( "        " + typeAppareil + " " + ident + " = new " + typeAppareil + "(\"" + ident + "\", TypeAppareil." + key.toUpperCase() + ");\n");
+                    bw.write("        ma_liste_appareils.add(" + ident + ");\n");
+                }
+            }
+            
+            
+            //Ajout des interfaces
+            HashMap<String, ArrayList<String>> identInterface = data.getIdentInterface();
+            bw.write("\n        //Interfaces\n");       
+            for(String key : identInterface.keySet()) {
+                ArrayList<String> list = identInterface.get(key);
+                
+                String typeInterface = "CInterface";
+                
+                Iterator<String> subItr = list.iterator();
+                while(subItr.hasNext()) {
+                    String ident = subItr.next();
+                    bw.write( "        " + typeInterface + " " + ident + " = new " + typeInterface + "(\"" + ident + "\", TypeInterface." + key.toUpperCase() + ");\n");
+                    bw.write("        ma_liste_interfaces.add(" + ident + ");\n");
+                }
+            }
+            
+            //Ajout des scenarii
+            HashMap<String, ArrayList<String>> scenarii = data.getIdentScenario();
+            bw.write("\n        //Scenarii\n"); 
+            
+            for(String key : scenarii.keySet()) {
+                ArrayList<String> list = scenarii.get(key);
+                
+                String typeScenario = "CScenario";
+                
+                Iterator<String> subItr = list.iterator();
+                
+                String scenarioContents = "";
+                while(subItr.hasNext()) {
+                    String content = subItr.next();
+                    System.out.println("content = " + content);
+                    scenarioContents += "\"" + content.replaceAll("\"", "\\\\\"") + "\\n\" + " + "\n";
+                } 
+                scenarioContents += "\"\";";
+                bw.write("    String " + key + "_contenu = " + scenarioContents + "\n");  
+                bw.write("    " + typeScenario + " " + key + " = new " + typeScenario + "(\"" + key + "\", " + key + "_contenu);\n");
+                bw.write("    ma_liste_scenarios.add(" + key + ");\n");
+            }
+            
+            
+            //Ajout des programmations
+            HashMap<String, ArrayList<Date>> programmations = data.getProgrammationScenario();
+            bw.write("\n        //Programmations\n");       
+            int idProg = 1;
+            for(String key : programmations.keySet()) {
+                ArrayList<Date> list = programmations.get(key);
+                
+                String typeProgrammation = "CProgrammation";
+                String identProg = "p" + idProg;
+                
+                bw.write( "        " + typeProgrammation + " " + identProg + " = new " + typeProgrammation + "(\"" + key + "\");\n");                
+                
+                Iterator<Date> subItr = list.iterator();
+                int idDate = 1;
+                while(subItr.hasNext()) {
+                    String typeDate = "CDate";
+                    Date date = subItr.next();
+                    String identDate = identProg + "d" + idDate;
+                    idDate++;
+                    
+                    bw.write(   "        "
+                                + typeDate + " "
+                                + identDate + " = new "
+                                + typeDate + "("
+                                + date.getAnnee()+ ", "
+                                + date.getMois() + ", "
+                                + date.getJour() + ", "
+                                + date.getHeure() + ", "
+                                + date.getMinute()
+                                + ");\n");
+                                
+                    bw.write("        " + identProg + ".addDate(" + identDate + ");\n");
+                }
+                bw.write("        ma_liste_programmations.add(" + identProg + ");\n\n");
+                idProg++;
+            }
+            
+            
+            //Ajout des associations
+            HashMap<String, ArrayList<String>> associations = data.getAssociationScenario();
+            bw.write("        //Associations\n");       
+            for(String key : associations.keySet()) {
+                ArrayList<String> list = associations.get(key);
+                
+                Iterator<String> subItr = list.iterator();
+                while(subItr.hasNext())
+                    bw.write("        " + key + ".addScenarioAssocie(\"" + subItr.next()  + "\");\n");
+            }
+             
+            
+            //Finalisation du fichier
+            bw.write("\n        //Finalisation\n");
+            bw.write("        monHabitat = new HabitatSpecific(ma_liste_appareils, ma_liste_ens_appareils, ma_liste_scenarios, ma_liste_interfaces, ma_liste_programmations);\n");
+             
+             
+            bw.write("    }\n");
+            bw.write("}");
+            
+            bw.close();
+            System.out.println("Enregistrement des données terminé.");
+        } catch(IOException e) {
+           System.out.println("Erreur. " + e.getMessage());
+        }
+    }
+    
+    private void generateHabitatSpecific() {
+        try {
+            System.out.println("Génération du fichier java CMaisonUSer");
+            
+            String fileName = "HabitatSpecific.java";
+            
+            File file = new File(fileName);
+            
+            if(file.exists()) {
+                System.out.println("\tLe fichier \"" + fileName + "\" existe déjà.");
+                System.out.print("\tSuppression du fichier Java...");
+                if(file.delete())
+                    System.out.println("OK.");
+                else {
+                    System.out.println("Echec.");
+                    return;
+                }
+            } else {
+                System.out.println("\tLe fichier \"" + fileName + "\" n'existe pas.");
+                System.out.print("\tCréation du fichier...");
+                if(file.createNewFile())
+                    System.out.println("OK.");
+                else {
+                    System.out.println("Echec.");
+                    return;
+                }
+            }
+            
+            FileWriter fw = new FileWriter(file.getAbsoluteFile(), true);
+            BufferedWriter bw = new BufferedWriter(fw);
+            
+            bw.write("//" + fileName + "\n\n");
+            bw.write("import java.util.ArrayList;\n\n");
+            bw.write("public class HabitatSpecific extends Habitat {\n");
+            bw.write("    public HabitatSpecific(  ArrayList<CAppareil> lapp,\n");
+            bw.write("                             ArrayList<CEnsAppareil> lens,\n");
+            bw.write("                             ArrayList<CScenario> lscen,\n");
+            bw.write("                             ArrayList<CInterface> lint,\n");
+            bw.write("                             ArrayList<CProgrammation> lprog) {\n");
+            
+            bw.write("        super(lapp,lens,lscen,lint,lprog);\n");
+            bw.write("    }\n\n");
+                                               
+            
+            bw.write("    public void execScenarioNum(int num) {\n");
+            bw.write("        System.out.println(\"Execution du scenario \"+ this.l_scenarios.get(num).getNomScenario() + \"...\");\n\n");
+            
+            bw.write("\n        //Scenarii\n");
+            bw.write("        switch(num) {\n");
+            
+             
+            HashMap<String, ArrayList<String>> identScenario = data.getIdentScenario();
+            int index = 0;
+            for(String key : identScenario.keySet()) {
+                ArrayList<String> list = identScenario.get(key);
+                
+                bw.write("        case " + index + ": //Scenario " + key + "\n");
+                
+                Iterator<String> subItr = list.iterator();
+                while(subItr.hasNext()) {
+                    bw.write("            " + subItr.next() + "\n");
+                }
+                bw.write("            break;\n");
+                index++;
+            }
+            
+           
+            bw.write("        }\n");
+            
+            
+            bw.write("    }\n");
+            bw.write("}");
+            
+            bw.close();
+            System.out.println("Enregistrement des données terminé.");
+        } catch(IOException e) {
+           System.out.println("Erreur. " + e.getMessage());
+        }
+    }
+    //============================================================//
+    //============================================================//
+    
+    
+    
+    ProgramData data = new ProgramData();
+    String currentScenario = "";
+:}
+
+terminal 
+//Appareils
+ECLAIRAGE,
+VOLET,
+CHAUFFAGE,
+ALARME,
+FENETRE,
+AUTRE_APPAREIL,
+INTERRUPTEUR,
+MOBILE,
+TELEPHONE,
+TELECOMMANDE,
+TABLETTE,
+TV,
+HIFI,
+CAFETIERE,
+VIDEO_PROJ,
+LAVE_VAISSELLE,
+LAVE_LINGE,
+SECHE_LINGE,
+ORDINATEUR,
+PORTAIL,
+
+//Etats appareils
+ALLUME,
+ETEINT,
+DEMI,
+ECO,
+OUVERT,
+FERME,
+
+//Methodes appareils
+OUVRIR,
+FERMER,
+ETEINDRE,
+ALLUMER,
+TAMISER,
+ETAT,
+ALLUMER_PARTIEL,
+ALLUMER_ECO,
+OUVRIR_PARTIEL,
+FERMER_PARTIEL,
+
+//instructionsAppareils
+POURTOUT,
+FAIRE,
+FAIT,
+SI,
+ALORS,
+SINON,
+FSI,
+
+//Fonctions DOMUS
+DEFINIR,
+EXECUTER_SCENARIO,
+ASSOCIER,
+PROGRAMMER,
+MESSAGE,
+
+//Balises MODUS
+PROGRAMME_DOMUS,
+DECLARATION_APPAREILS,
+DECLARATION_INTERFACES,
+DECLARATION_SCENARII,
+DECLARATION_COMMANDES,
+SCENARIO,
+
+//Operateurs
+PAR_GAUCHE,
+PAR_DROITE,
+ACO_GAUCHE,
+ACO_DROITE,
+AFFECTATION,
+EGALITE,
+POINT_VIRGULE,
+CHEVRON_GAUCHE,
+CHEVRON_DROIT,
+SLASH,
+UNDERSCORE,
+POINT,
+VIRGULE,
+DEUX_POINT;
+
+// qqs exemples de règles lexicales légales...
+terminal Integer ENTIER;
+terminal String IDENTIFIANT, CHAINE;
+
+non terminal
+    prog,
+    domus, openDomus, closeDomus, domusContent,
+    declarationAppareilsInterfaces, declarationScenarii, declarationCommande,
+    declarationAppareils, declarationInterfaces,
+    openAppareils, closeAppareils,
+    openInterfaces, closeInterfaces,
+    openScenarii, closeScenarii, scenariiContent,
+    scenario,
+    openCommande, closeCommande,
+   
+    listInstructionsAppareil, instructionsAppareil,
+    listInstructionsInterface, instructionsInterface,
+    listInstructionsCommande, instructionsCommande,
+    listInstructionsScenario,  instructionsScenario, actionAppareil, parcours, testCondition, condition,
+    
+    commandeDeclarationAppareil,
+    commandeAutreAppareil,
+    commandeDefinition,
+    commandeExecuterScenario,
+    commandeMessage,
+    commandeAssociation,
+    commandeProgrammation,
+   
+    appelAction
+;
+
+non terminal String openScenario, closeScenario, appareil, autreAppareil, interface, listAction, element, etatAppareil, autreAppareilDefinition, identifiantDefintion;
+non terminal ArrayList<String> identMult;
+
+non terminal Date programmationContents;
+non terminal ArrayList<Date> multiProgrammationContents;
+
+non terminal Integer subProgrammationContents;
+
+prog ::=
+    domus {:
+        System.out.println("Analyse terminée.\n");
+        this.generateFiles();
+    :}
+    | {:
+        System.out.println("Fichier vide.");
+    :};
+
+domus ::=
+    openDomus {: System.out.println("Début du Domus..."); :}
+    domusContent
+    closeDomus {: System.out.println("Domus déclaré."); :};
+    
+domusContent ::=
+    declarationAppareilsInterfaces
+    declarationScenarii
+    declarationCommande;
+
+
+declarationAppareilsInterfaces ::=
+    declarationAppareils
+    declarationInterfaces
+    |   declarationInterfaces
+        declarationAppareils;
+
+
+declarationAppareils ::=
+    openAppareils {: System.out.println("\tDéclaration des appareils..."); :}
+    listInstructionsAppareil
+    closeAppareils {: System.out.println("\tAppareils déclarés.\n"); :};
+ 
+listInstructionsAppareil ::=
+    listInstructionsAppareil instructionsAppareil
+    | instructionsAppareil;
+
+instructionsAppareil ::=
+    commandeDeclarationAppareil
+    | commandeAutreAppareil
+    | commandeDefinition;
+    
+commandeDeclarationAppareil ::=
+    appareil:a
+    identMult:l
+    POINT {:
+        this.addIdentAppareil(a, l);
+        System.out.println("\t\tDéclaration des appareils " + l + " de type \"" + a + "\".");
+    :};
+
+commandeAutreAppareil ::=
+    autreAppareilDefinition:a
+    identMult:l
+    POINT {:
+        this.addIdentAppareil("autre_appareil", l);
+        System.out.println("\t\tDéclaration des appareils " + l + " de type \"" + a + "\".");
+    :};
+
+autreAppareilDefinition ::=
+    AUTRE_APPAREIL
+    PAR_GAUCHE
+    autreAppareil:a {: RESULT = a; :}
+    PAR_DROITE;
+
+commandeDefinition ::=
+    DEFINIR
+    IDENTIFIANT:id
+    AFFECTATION
+    ACO_GAUCHE
+    identMult:l
+    ACO_DROITE
+    POINT {:
+        //this.addIdentAppareil(id, l);
+        System.out.println("\t\tDéclaration de l'ensemble des appareils \"" + id + "\" contenant " + l + ".");
+    :};
+
+declarationInterfaces ::=
+    openInterfaces {: System.out.println("\tDéclaration des interfaces..."); :}
+    listInstructionsInterface
+    closeInterfaces {: System.out.println("\tInterfaces déclarées.\n"); :};  
+
+listInstructionsInterface ::=
+    listInstructionsInterface instructionsInterface
+    | instructionsInterface;
+
+instructionsInterface ::=
+    interface :a
+    identMult:l
+    POINT {:
+        this.addIdentInterface(a, l);
+        System.out.println("\t\tDéclaration des interfaces " + l + " de type \"" + a + "\".");
+    :};
+
+identMult ::=
+    IDENTIFIANT:id {:
+        ArrayList<String> list = new ArrayList<String>();
+        list.add(id);
+        RESULT = list;
+    :}
+    |   identMult:l
+        VIRGULE
+        IDENTIFIANT:id {:
+            ArrayList<String> list = new ArrayList<String>();
+            list.addAll(l);
+            list.add(id);
+            RESULT = list;
+        :};
+
+declarationScenarii ::=
+    openScenarii {: System.out.println("\tDéclaration du Scenarii...\n"); :}
+    scenariiContent
+    closeScenarii {: System.out.println("\tScenarii déclaré.\n"); :};
+
+scenariiContent ::=
+    scenariiContent scenario
+    | scenario;
+
+scenario ::=
+    openScenario:idOpen {: 
+        System.out.println("\t\tDéclaration du Scenario \"" + idOpen + "\"...");
+        this.currentScenario = idOpen;
+    :}
+    listInstructionsScenario
+    closeScenario:idClose {:
+        if(idOpen.equals(idClose)) {
+            //this.addIdentScenario(idOpen);
+            System.out.println("\t\tScenario \"" + idClose + "\" déclaré.\n");
+        } else
+            System.out.println("Erreur. Les identifiants dans les balises de scenario doivent être identiques.");
+        this.currentScenario = "";
+        
+    :};
+
+listInstructionsScenario ::=
+    listInstructionsScenario instructionsScenario
+    | instructionsScenario;
+    
+instructionsScenario ::=
+    actionAppareil {:
+        System.out.println(".");
+    :}
+    | parcours {:
+        System.out.println("");
+    :}
+    | testCondition {:
+        System.out.println("");
+    :}
+    | commandeExecuterScenario
+    | commandeMessage;
+    
+actionAppareil ::=
+    appelAction
+    POINT_VIRGULE;
+
+appelAction ::=
+    IDENTIFIANT:id
+    POINT
+    listAction:a {:
+        String type = data.getType(id);
+        if(type == null)
+            System.out.println("Erreur. L'identifiant d'appareil \"" + id + "\" n'existe pas.");
+        else {       
+            if(!data.hasAction(type, a))
+                System.out.println("Erreur. L'action \"" + a + "\" n'existe pas pour \"" + id + "\"."); 
+            else {     
+                System.out.print("\t\t\tMéthode \"" + a + "\" appelé sur \"" + id + "\"");
+                
+                
+                ArrayList<String> current = data.getIdentScenario().get(currentScenario);
+                
+                if(current != null && current.size() >= 1 && !(current.get(current.size() - 1).startsWith("if"))) {
+                    data.addScenarioContent("for(CAppareil appareil : this.l_appareils)");
+                    data.addScenarioContent("if(appareil.getNomAppareil().equals(\"" + id + "\"))");
+                } else if(current == null) {
+                    data.addScenarioContent("for(CAppareil appareil : this.l_appareils)");
+                    data.addScenarioContent("if(appareil.getNomAppareil().equals(\"" + id + "\"))");
+                }
+                
+                
+                data.addScenarioContent("appareil.appliquer(TypeActionAppareil." + a.toUpperCase() + ");");
+            }     
+        }
+    :};
+
+parcours ::=
+    POURTOUT
+    IDENTIFIANT:idRef
+    DEUX_POINT
+    identifiantDefintion:e
+    FAIRE {:
+        data.addTemporalyIdent(e, idRef);
+        System.out.print("\t\t\tPourtout tout \"" + idRef + "\" de type \"" + e + "\" faire\"");
+        
+        data.addScenarioContent("for(CAppareil appareil : this.l_appareils)");
+        data.addScenarioContent("if(appareil.typeAppareil.equals(TypeAppareil." + e.toUpperCase() + ")) {");
+    :}
+    listInstructionsScenario {: //Faire n'importe quelle action disponibles dans un scenario
+        data.addScenarioContent("}");
+    :}
+    FAIT
+    POINT_VIRGULE;
+
+testCondition ::=
+    SI
+    PAR_GAUCHE {:
+        System.out.print("\t\t\tSi\n\t");
+        
+    :}
+    condition
+    PAR_DROITE
+    ALORS {:
+        System.out.print("\n\t\t\talors\n\t");
+    :}
+    listInstructionsScenario {: //Faire n'importe quelle action disponibles dans un scenario
+        data.addScenarioContent("}");
+    :}
+    FSI
+    POINT_VIRGULE;
+
+condition ::=
+    IDENTIFIANT:id
+    POINT
+    ETAT
+    EGALITE
+    etatAppareil:e {:
+        System.out.print(" == \"" + e + "\"");
+        
+        String type = data.getType(id);
+        if(type == null)
+            System.out.println("Erreur. L'identifiant d'appareil \"" + id + "\" n'existe pas.");
+        else {       
+            data.addScenarioContent("for(CAppareil appareil : this.l_appareils)");
+            data.addScenarioContent("if(appareil.getNomAppareil().equals(\"" + id + "\"))");
+            data.addScenarioContent("if(appareil.etatAppareil.equals(TypeEtatAppareil." + e.toUpperCase() + ")) {");
+        }
+        
+        
+    :};
+
+commandeExecuterScenario ::=
+    EXECUTER_SCENARIO
+    IDENTIFIANT:id
+    POINT_VIRGULE {:
+        System.out.println("\t\t\tExecution du scénario \"" + id + "\".");
+    :};
+
+commandeMessage ::=
+    MESSAGE
+    PAR_GAUCHE
+    CHAINE:c
+    PAR_DROITE
+    POINT_VIRGULE {:
+        System.out.println("\t\t\tMessage : " + c + ".");
+    :};
+
+declarationCommande ::=
+    openCommande {: System.out.println("\tDéclaration des commandes..."); :}
+    listInstructionsCommande
+    closeCommande {: System.out.println("\tCommandes déclarées."); :};
+
+listInstructionsCommande ::=
+    listInstructionsCommande instructionsCommande
+    | instructionsCommande;
+    
+instructionsCommande ::=
+    commandeAssociation
+    | commandeProgrammation;
+
+commandeAssociation ::=
+    ASSOCIER
+    IDENTIFIANT:id
+    AFFECTATION
+    IDENTIFIANT:s
+    POINT {:
+        ArrayList<String> l = new ArrayList<String>();
+        l.add(s);
+        this.addAssociationScenario(id, l);
+        System.out.println("\t\tAssociation de l'interface \"" + id + "\" au scénario \"" + s + "\".");
+    :}
+    | ASSOCIER
+    IDENTIFIANT:id
+    AFFECTATION
+    ACO_GAUCHE
+    identMult:l
+    ACO_DROITE
+    POINT {:
+        this.addAssociationScenario(id, l);
+        System.out.println("\t\tAssociation de l'interface \"" + id + "\" au scénario \"" + l + "\".");
+    :};
+
+commandeProgrammation ::=
+    PROGRAMMER
+    IDENTIFIANT:id
+    AFFECTATION
+    programmationContents:d
+    POINT {:
+        ArrayList<Date> l = new ArrayList<Date>();
+        l.add(d);
+        this.addScenarioDate(id, l);
+        System.out.println("\t\tProgrammation du scénario \"" + id + "\" pour l'unique date : " + d);
+    :}
+    | PROGRAMMER 
+    IDENTIFIANT:id 
+    AFFECTATION 
+    ACO_GAUCHE 
+    multiProgrammationContents:l
+    ACO_DROITE
+    POINT {:
+        this.addScenarioDate(id, l);
+        Iterator<Date> itr = l.iterator();
+        while(itr.hasNext())
+            System.out.println("\t\tProgrammation du scénario \"" + id + "\" pour la date : " + itr.next());
+    :};
+
+multiProgrammationContents ::=
+    multiProgrammationContents:l
+    VIRGULE
+    programmationContents:d {:
+        ArrayList<Date> date = new ArrayList<Date>();
+        date.addAll(l);
+        date.add(d);
+        RESULT = date;
+    :}
+    | programmationContents:d {:
+        ArrayList<Date> date = new ArrayList<Date>();
+        date.add(d);
+        RESULT = date;
+    :};
+    
+programmationContents ::=
+    PAR_GAUCHE
+    subProgrammationContents:annee VIRGULE
+    subProgrammationContents:mois VIRGULE
+    subProgrammationContents:jour VIRGULE
+    subProgrammationContents:heure VIRGULE
+    subProgrammationContents:minute
+    PAR_DROITE {:
+        Date date = new Date(-1, -1, -1, -1, -1);
+        
+        boolean errorDate = false;
+        
+        if(!(annee >= 1000 && annee <= 9999) && annee != -1) {
+            System.out.println("Erreur. Format de l'année incorrect.");
+            RESULT = date;
+            errorDate = true;
+        }
+        
+        if(!(mois >= 1 && mois <= 12) && mois != -1) {
+            System.out.println("Erreur. Format du mois incorrect.");
+            RESULT = date;
+            errorDate = true;
+        }
+        
+        if(!(jour >= 1 && jour <= 31) && jour != -1) {
+            System.out.println("Erreur. Format du jour incorrect.");
+            RESULT = date;
+            errorDate = true;
+        }
+        
+        if(!(heure >= 0 && heure <= 23) && heure != -1) {
+            System.out.println("Erreur. Format de l'heure incorrect.");
+            RESULT = date;
+            errorDate = true;
+        }
+        
+        if(!(minute >= 0 && minute <= 59) && minute != -1) {
+            System.out.println("Erreur. Format de la minute incorrect.");
+            RESULT = date;
+            errorDate = true;
+        }
+        
+        if(!errorDate) {
+            date = new Date(annee, mois, jour, heure, minute);
+            RESULT = date;
+        }
+    :};
+
+subProgrammationContents ::=
+    ENTIER:e {: RESULT = e; :}
+    | UNDERSCORE {: RESULT = -1; :};
+
+openDomus ::=
+    CHEVRON_GAUCHE
+    PROGRAMME_DOMUS
+    CHEVRON_DROIT;
+    
+closeDomus ::=
+    CHEVRON_GAUCHE
+    SLASH
+    PROGRAMME_DOMUS
+    CHEVRON_DROIT;
+  
+    
+openAppareils ::=
+    CHEVRON_GAUCHE
+    DECLARATION_APPAREILS
+    CHEVRON_DROIT;
+
+closeAppareils ::=
+    CHEVRON_GAUCHE
+    SLASH
+    DECLARATION_APPAREILS
+    CHEVRON_DROIT;
+
+
+openInterfaces ::=
+    CHEVRON_GAUCHE
+    DECLARATION_INTERFACES
+    CHEVRON_DROIT;
+
+closeInterfaces ::=
+    CHEVRON_GAUCHE
+    SLASH
+    DECLARATION_INTERFACES
+    CHEVRON_DROIT;
+
+
+openScenarii ::=
+    CHEVRON_GAUCHE
+    DECLARATION_SCENARII
+    CHEVRON_DROIT; 
+
+closeScenarii ::=
+    CHEVRON_GAUCHE
+    SLASH
+    DECLARATION_SCENARII
+    CHEVRON_DROIT;
+
+
+openScenario ::=
+    CHEVRON_GAUCHE
+    SCENARIO
+    IDENTIFIANT:id
+    CHEVRON_DROIT {: RESULT = id; :};
+
+closeScenario ::=
+    CHEVRON_GAUCHE
+    SLASH
+    SCENARIO
+    IDENTIFIANT:id
+    CHEVRON_DROIT {: RESULT = id; :};
+
+
+openCommande ::=
+    CHEVRON_GAUCHE
+    DECLARATION_COMMANDES
+    CHEVRON_DROIT;
+    
+closeCommande ::=
+    CHEVRON_GAUCHE
+    SLASH
+    DECLARATION_COMMANDES
+    CHEVRON_DROIT;
+
+identifiantDefintion ::=
+    autreAppareilDefinition:r   {: RESULT = r; :}
+    | element:r                 {: RESULT = r; :};
+
+element ::=
+    appareil:r          {: RESULT = r; :}
+    | interface:r       {: RESULT = r; :}
+    | autreAppareil:r   {: RESULT = r; :}
+    | IDENTIFIANT:r     {: RESULT = r; :};
+  
+appareil ::=
+    ECLAIRAGE   {: RESULT = "eclairage"; :}
+    | VOLET     {: RESULT = "volet"; :}
+    | CHAUFFAGE {: RESULT = "chauffage"; :}
+    | ALARME    {: RESULT = "alarme"; :}
+    | FENETRE   {: RESULT = "fenetre"; :};
+
+interface ::=
+    INTERRUPTEUR    {: RESULT = "interrupteur"; :}
+    | MOBILE        {: RESULT = "mobile"; :}
+    | TELEPHONE     {: RESULT = "telephone"; :}
+    | TELECOMMANDE  {: RESULT = "telecommande"; :}
+    | TABLETTE      {: RESULT = "tablette"; :};
+
+autreAppareil ::=
+    TV                  {: RESULT = "tv"; :}
+    | HIFI              {: RESULT = "hifi"; :}
+    | CAFETIERE         {: RESULT = "cafetiere"; :}
+    | VIDEO_PROJ        {: RESULT = "video_proj"; :}
+    | LAVE_VAISSELLE    {: RESULT = "lave_vaisselle"; :}
+    | LAVE_LINGE        {: RESULT = "lave_linge"; :}
+    | SECHE_LINGE       {: RESULT = "seche_linge"; :}
+    | PORTAIL           {: RESULT = "portail"; :}
+    | ORDINATEUR        {: RESULT = "ordinateur"; :};
+    
+listAction ::=
+    OUVRIR              {: RESULT = "ouvrir"; :}
+    | FERMER            {: RESULT = "fermer"; :}
+    | ETEINDRE          {: RESULT = "eteindre"; :}
+    | ALLUMER           {: RESULT = "allumer"; :}
+    | TAMISER           {: RESULT = "tamiser"; :}
+    | ETAT              {: RESULT = "etat"; :}
+    | ALLUMER_PARTIEL   {: RESULT = "allumer_partiel"; :}
+    | ALLUMER_ECO       {: RESULT = "allumer_eco"; :}
+    | OUVRIR_PARTIEL    {: RESULT = "ouvrir_partiel"; :}
+    | FERMER_PARTIEL    {: RESULT = "fermer_partiel"; :};
+    
+etatAppareil ::=
+    ALLUME      {: RESULT = "allume"; :}
+    | ETEINT    {: RESULT = "eteint"; :}
+    | DEMI      {: RESULT = "demi"; :}
+    | ECO       {: RESULT = "eco"; :}
+    | OUVERT    {: RESULT = "ouvert"; :}
+    | FERME     {: RESULT = "ferme"; :};
